@@ -29,7 +29,7 @@ class ProductController extends Controller
                 'contents' => $product->contents ?? [],
                 'price_from' => $product->price_from,
                 'image_url' => $product->image
-                    ? asset('storage/' . $product->image)
+                    ? asset('storage/'.$product->image)
                     : null,
                 'sort_order' => $product->sort_order,
                 'is_active' => $product->is_active,

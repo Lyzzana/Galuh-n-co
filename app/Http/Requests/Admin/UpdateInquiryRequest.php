@@ -26,7 +26,7 @@ class UpdateInquiryRequest extends FormRequest
     {
         return [
             'status.required' => 'Status harus diisi.',
-            'status.in'       => 'Status tidak valid. Pilih: new, contacted, atau closed.',
+            'status.in' => 'Status tidak valid. Pilih: new, contacted, atau closed.',
         ];
     }
 }

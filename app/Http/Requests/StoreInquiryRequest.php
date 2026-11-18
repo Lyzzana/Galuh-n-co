@@ -31,12 +31,12 @@ class StoreInquiryRequest extends FormRequest
             'budget_per_package' => ['required', 'integer'],
             'needed_date' => ['required', 'date'],
             'notes' => ['nullable', 'string'],
-            //Honeypot anti-spam: field jebakan yang harus selalu kosong, jika diisi maka dianggap spam
+            // Honeypot anti-spam: field jebakan yang harus selalu kosong, jika diisi maka dianggap spam
             'website' => ['nullable', 'string', 'max:255', 'prohibited'],
         ];
     }
 
-    public function message(): array 
+    public function message(): array
     {
         return [
             'name.required' => 'Nama harus diisi.',

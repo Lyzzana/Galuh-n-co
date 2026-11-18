@@ -110,9 +110,9 @@ export default function ProductsIndex({ products }: PageProps) {
         };
 
         if (editingProduct) {
-            put(ProductController.update(editingProduct.id), options);
+            put(ProductController.update(editingProduct.id).url, options);
         } else {
-            post(ProductController.store(), options);
+            post(ProductController.store().url, options);
         }
     };
 

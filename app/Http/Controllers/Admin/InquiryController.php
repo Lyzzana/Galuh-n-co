@@ -18,18 +18,18 @@ class InquiryController extends Controller
             ->get()
             ->map(function ($inquiry) {
                 return [
-                    'id'                    => $inquiry->id,
-                    'name'                  => $inquiry->name,
-                    'company'               => $inquiry->company,
-                    'email'                 => $inquiry->email,
-                    'whatsapp_number'       => $inquiry->whatsapp_number,
-                    'estimated_quantity'    => $inquiry->estimated_quantity,
-                    'budget_per_package'    => $inquiry->budget_per_package,
-                    'needed_date'           => $inquiry->needed_date->format('Y-m-d'),
+                    'id' => $inquiry->id,
+                    'name' => $inquiry->name,
+                    'company' => $inquiry->company,
+                    'email' => $inquiry->email,
+                    'whatsapp_number' => $inquiry->whatsapp_number,
+                    'estimated_quantity' => $inquiry->estimated_quantity,
+                    'budget_per_package' => $inquiry->budget_per_package,
+                    'needed_date' => $inquiry->needed_date->format('Y-m-d'),
                     'needed_date_formatted' => $inquiry->needed_date->translatedFormat('d M Y'),
-                    'notes'                 => $inquiry->notes,
-                    'status'                => $inquiry->status,
-                    'created_at'            => $inquiry->created_at->translatedFormat('d M Y, H:i'),
+                    'notes' => $inquiry->notes,
+                    'status' => $inquiry->status,
+                    'created_at' => $inquiry->created_at->translatedFormat('d M Y, H:i'),
                 ];
             });
 

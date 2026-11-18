@@ -36,8 +36,8 @@ return [
     ],
 
     'galuhco' => [
-        'whatsapp_number' => env('WHATSAPP_NUMBER','621779839434'),
-        'admin_email' => env('ADMIN_EMAIL','admin@galuhco.com'),
+        'whatsapp_number' => env('WHATSAPP_NUMBER', '621779839434'),
+        'admin_email' => env('ADMIN_EMAIL', 'admin@galuhco.com'),
     ],
 
 ];
