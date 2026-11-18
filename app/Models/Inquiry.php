@@ -3,7 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property Carbon $needed_date
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class Inquiry extends Model
 {
     protected $fillable = [

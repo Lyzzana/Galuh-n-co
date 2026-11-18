@@ -36,6 +36,7 @@ class StoreInquiryRequest extends FormRequest
         ];
     }
 
+    /** @return array<string, string> */
     public function message(): array
     {
         return [

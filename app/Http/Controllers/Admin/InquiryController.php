@@ -16,7 +16,7 @@ class InquiryController extends Controller
         $inquiries = Inquiry::query()
             ->latest()
             ->get()
-            ->map(function ($inquiry) {
+            ->map(function (Inquiry $inquiry) {
                 return [
                     'id' => $inquiry->id,
                     'name' => $inquiry->name,

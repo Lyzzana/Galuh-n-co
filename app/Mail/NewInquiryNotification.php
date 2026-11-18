@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Inquiry;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -16,7 +17,7 @@ class NewInquiryNotification extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public $inquiry)
+    public function __construct(public Inquiry $inquiry)
     {
         //
     }
