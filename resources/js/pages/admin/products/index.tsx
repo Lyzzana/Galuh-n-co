@@ -1,10 +1,9 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { Pencil, PlusCircle, Trash2 } from 'lucide-react';
+import { PlusIcon, PencilIcon, Trash2Icon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
@@ -15,17 +14,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import ProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
 import { dashboard } from '@/routes';
+import { cn } from '@/utils';
 
 type Product = {
     id: number;
@@ -39,9 +31,7 @@ type Product = {
     is_active: boolean;
 };
 
-type PageProps = {
-    products: Product[];
-};
+type PageProps = { products: Product[] };
 
 type ProductFormData = {
     name: string;
@@ -55,21 +45,27 @@ type ProductFormData = {
 };
 
 export default function ProductsIndex({ products }: PageProps) {
+    const [search, setSearch] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
 
-    const { data, setData, post, put, processing, errors, reset } =
-        useForm<ProductFormData>({
-            name: '',
-            category: '',
-            short_description: '',
-            contents: '',
-            price_from: '',
-            sort_order: '0',
-            is_active: true,
-            image: null,
-        });
+    const { data, setData, processing, errors, reset } = useForm<ProductFormData>({
+        name: '',
+        category: '',
+        short_description: '',
+        contents: '',
+        price_from: '',
+        sort_order: '0',
+        is_active: true,
+        image: null,
+    });
+
+    const filtered = products.filter(
+        (p) =>
+            p.name.toLowerCase().includes(search.toLowerCase()) ||
+            p.category.toLowerCase().includes(search.toLowerCase()),
+    );
 
     const openCreate = () => {
         reset();
@@ -94,38 +90,43 @@ export default function ProductsIndex({ products }: PageProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const contentsArray = data.contents
+            .split('\n')
+            .map((l) => l.trim())
+            .filter(Boolean);
+        const payload = new FormData();
+        payload.append('name', data.name);
+        payload.append('category', data.category);
+        payload.append('short_description', data.short_description);
+        contentsArray.forEach((item) => payload.append('contents[]', item));
+        payload.append('price_from', data.price_from);
+        payload.append('sort_order', data.sort_order);
+        payload.append('is_active', data.is_active ? '1' : '0');
+        if (data.image) payload.append('image', data.image);
 
-        const options = {
-            forceFormData: true,
+        const opts = {
             preserveScroll: true,
             onSuccess: () => {
                 setModalOpen(false);
                 reset();
-                toast.success(
-                    editingProduct
-                        ? 'Produk berhasil diperbarui.'
-                        : 'Produk berhasil ditambahkan.',
-                );
+                toast.success(editingProduct ? 'Produk diperbarui.' : 'Produk ditambahkan.');
             },
         };
-
         if (editingProduct) {
-            put(ProductController.update(editingProduct.id).url, options);
+            payload.append('_method', 'PUT');
+            router.post(ProductController.update(editingProduct.id).url, payload, opts);
         } else {
-            post(ProductController.store().url, options);
+            router.post(ProductController.store().url, payload, opts);
         }
     };
 
     const handleDelete = () => {
-        if (!deleteTarget) {
-            return;
-        }
-
+        if (!deleteTarget) return;
         router.delete(ProductController.destroy(deleteTarget.id), {
             preserveScroll: true,
             onSuccess: () => {
                 setDeleteTarget(null);
-                toast.success('Produk berhasil dihapus.');
+                toast.success('Produk dihapus.');
             },
         });
     };
@@ -134,135 +135,175 @@ export default function ProductsIndex({ products }: PageProps) {
         <>
             <Head title="Manajemen Produk" />
 
-            <div className="space-y-6 p-4 md:p-6">
+            <div className="p-6 space-y-5">
+                {/* Header */}
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-xl font-semibold">
-                            Manajemen Produk
-                        </h1>
-                        <p className="text-sm text-muted-foreground">
-                            Kelola produk hampers yang ditampilkan di katalog.
-                        </p>
-                    </div>
-                    <Button onClick={openCreate} className="gap-2">
-                        <PlusCircle className="size-4" />
+                    <h1 className="text-xl font-bold text-gray-900">Daftar Produk</h1>
+                    <Button onClick={openCreate} className="gap-2 rounded-xl">
+                        <PlusIcon className="size-4" />
                         Tambah Produk
                     </Button>
                 </div>
 
-                <Card>
-                    <CardContent className="p-0">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-16">Foto</TableHead>
-                                    <TableHead>Nama</TableHead>
-                                    <TableHead>Kategori</TableHead>
-                                    <TableHead className="text-right">
+                {/* Summary cards */}
+                <div className="grid grid-cols-3 gap-3">
+                    <div className="rounded-2xl bg-emerald-800 px-5 py-4 text-white shadow-sm">
+                        <p className="text-xs font-medium opacity-80">Total Produk</p>
+                        <p className="mt-1 text-3xl font-bold">{products.length}</p>
+                    </div>
+                    <div className="rounded-2xl bg-emerald-600 px-5 py-4 text-white shadow-sm">
+                        <p className="text-xs font-medium opacity-80">Aktif</p>
+                        <p className="mt-1 text-3xl font-bold">
+                            {products.filter((p) => p.is_active).length}
+                        </p>
+                    </div>
+                    <div className="rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+                        <p className="text-xs font-medium text-gray-500">Nonaktif</p>
+                        <p className="mt-1 text-3xl font-bold text-gray-900">
+                            {products.filter((p) => !p.is_active).length}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Toolbar */}
+                <div className="flex items-center gap-3">
+                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm max-w-xs">
+                        <SearchIcon className="size-4 shrink-0 text-gray-400" />
+                        <input
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Cari produk..."
+                            className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
+                        />
+                    </div>
+                    <span className="text-xs text-gray-400">{filtered.length} produk</span>
+                </div>
+
+                {/* Table */}
+                <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                            <thead>
+                                <tr className="border-b border-gray-100 bg-gray-50/60">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 w-14">
+                                        Foto
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                        Nama
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                        Kategori
+                                    </th>
+                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                                         Harga Mulai
-                                    </TableHead>
-                                    <TableHead className="text-center">
+                                    </th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                                         Urutan
-                                    </TableHead>
-                                    <TableHead className="text-center">
+                                    </th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
                                         Status
-                                    </TableHead>
-                                    <TableHead className="text-right">
+                                    </th>
+                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
                                         Aksi
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {products.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
+                                {filtered.length === 0 ? (
+                                    <tr>
+                                        <td
                                             colSpan={7}
-                                            className="py-10 text-center text-muted-foreground"
+                                            className="py-12 text-center text-sm text-gray-400"
                                         >
-                                            Belum ada produk. Tambahkan produk
-                                            pertama.
-                                        </TableCell>
-                                    </TableRow>
+                                            {search
+                                                ? 'Tidak ada hasil yang cocok.'
+                                                : 'Belum ada produk.'}
+                                        </td>
+                                    </tr>
                                 ) : (
-                                    products.map((product) => (
-                                        <TableRow key={product.id}>
-                                            <TableCell>
+                                    filtered.map((product) => (
+                                        <tr
+                                            key={product.id}
+                                            className="hover:bg-gray-50/60 transition-colors"
+                                        >
+                                            <td className="px-4 py-3">
                                                 {product.image_url ? (
                                                     <img
                                                         src={product.image_url}
                                                         alt={product.name}
-                                                        className="size-12 rounded-md object-cover"
+                                                        className="size-11 rounded-xl object-cover"
                                                     />
                                                 ) : (
-                                                    <div className="size-12 rounded-md bg-muted" />
+                                                    <div className="size-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 text-xs">
+                                                        ?
+                                                    </div>
                                                 )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <p className="font-medium">
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <p className="font-medium text-gray-900">
                                                     {product.name}
                                                 </p>
-                                                <p className="line-clamp-1 text-xs text-muted-foreground">
+                                                <p className="line-clamp-1 text-xs text-gray-400 mt-0.5">
                                                     {product.short_description}
                                                 </p>
-                                            </TableCell>
-                                            <TableCell>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-600">
                                                 {product.category}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                {formatRupiah(
-                                                    product.price_from,
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-center">
+                                            </td>
+                                            <td className="px-4 py-3 text-right font-medium text-gray-900">
+                                                {formatRupiah(product.price_from)}
+                                            </td>
+                                            <td className="px-4 py-3 text-center text-gray-600">
                                                 {product.sort_order}
-                                            </TableCell>
-                                            <TableCell className="text-center">
-                                                <Badge
-                                                    variant={
+                                            </td>
+                                            <td className="px-4 py-3 text-center">
+                                                <span
+                                                    className={cn(
+                                                        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
                                                         product.is_active
-                                                            ? 'default'
-                                                            : 'secondary'
-                                                    }
+                                                            ? 'bg-green-50 text-green-700'
+                                                            : 'bg-gray-100 text-gray-500',
+                                                    )}
                                                 >
-                                                    {product.is_active
-                                                        ? 'Aktif'
-                                                        : 'Nonaktif'}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        onClick={() =>
-                                                            openEdit(product)
-                                                        }
+                                                    <span
+                                                        className={cn(
+                                                            'size-1.5 rounded-full',
+                                                            product.is_active
+                                                                ? 'bg-green-500'
+                                                                : 'bg-gray-400',
+                                                        )}
+                                                    />
+                                                    {product.is_active ? 'Aktif' : 'Nonaktif'}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-right">
+                                                <div className="flex justify-end gap-1.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => openEdit(product)}
+                                                        className="rounded-lg p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-500 transition-colors"
                                                     >
-                                                        <Pencil className="size-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="icon"
-                                                        onClick={() =>
-                                                            setDeleteTarget(
-                                                                product,
-                                                            )
-                                                        }
+                                                        <PencilIcon className="size-4" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setDeleteTarget(product)}
+                                                        className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
                                                     >
-                                                        <Trash2 className="size-4" />
-                                                    </Button>
+                                                        <Trash2Icon className="size-4" />
+                                                    </button>
                                                 </div>
-                                            </TableCell>
-                                        </TableRow>
+                                            </td>
+                                        </tr>
                                     ))
                                 )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            {/* Modal tambah / edit */}
+            {/* Modal tambah/edit */}
             <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                 <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                     <DialogHeader>
@@ -270,133 +311,92 @@ export default function ProductsIndex({ products }: PageProps) {
                             {editingProduct ? 'Edit Produk' : 'Tambah Produk'}
                         </DialogTitle>
                     </DialogHeader>
-
-                    <form
-                        id="product-form"
-                        onSubmit={handleSubmit}
-                        className="space-y-4"
-                    >
-                        <div className="grid gap-2">
+                    <form id="product-form" onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid gap-1.5">
                             <Label htmlFor="name">Nama Produk</Label>
                             <Input
                                 id="name"
                                 value={data.name}
-                                onChange={(e) =>
-                                    setData('name', e.target.value)
-                                }
+                                onChange={(e) => setData('name', e.target.value)}
                                 placeholder="Hampers Premium A"
                             />
                             {errors.name && (
-                                <p className="text-sm text-destructive">
-                                    {errors.name}
-                                </p>
+                                <p className="text-sm text-red-500">{errors.name}</p>
                             )}
                         </div>
-
-                        <div className="grid gap-2">
+                        <div className="grid gap-1.5">
                             <Label htmlFor="category">Kategori</Label>
                             <Input
                                 id="category"
                                 value={data.category}
-                                onChange={(e) =>
-                                    setData('category', e.target.value)
-                                }
+                                onChange={(e) => setData('category', e.target.value)}
                                 placeholder="Corporate Gift"
                             />
                             {errors.category && (
-                                <p className="text-sm text-destructive">
-                                    {errors.category}
-                                </p>
+                                <p className="text-sm text-red-500">{errors.category}</p>
                             )}
                         </div>
-
-                        <div className="grid gap-2">
-                            <Label htmlFor="short_description">
-                                Deskripsi Singkat
-                            </Label>
+                        <div className="grid gap-1.5">
+                            <Label htmlFor="short_description">Deskripsi Singkat</Label>
                             <Textarea
                                 id="short_description"
                                 value={data.short_description}
-                                onChange={(e) =>
-                                    setData('short_description', e.target.value)
-                                }
+                                onChange={(e) => setData('short_description', e.target.value)}
                                 rows={3}
-                                placeholder="Deskripsi produk dalam 1–2 kalimat..."
+                                placeholder="Deskripsi 1–2 kalimat..."
                             />
                             {errors.short_description && (
-                                <p className="text-sm text-destructive">
-                                    {errors.short_description}
-                                </p>
+                                <p className="text-sm text-red-500">{errors.short_description}</p>
                             )}
                         </div>
-
-                        <div className="grid gap-2">
+                        <div className="grid gap-1.5">
                             <Label htmlFor="contents">
                                 Isi Produk{' '}
-                                <span className="text-muted-foreground">
-                                    (satu per baris)
-                                </span>
+                                <span className="text-gray-400 font-normal">(satu per baris)</span>
                             </Label>
                             <Textarea
                                 id="contents"
                                 value={data.contents}
-                                onChange={(e) =>
-                                    setData('contents', e.target.value)
-                                }
+                                onChange={(e) => setData('contents', e.target.value)}
                                 rows={4}
-                                placeholder="Kue kering premium&#10;Coklat impor&#10;Mug eksklusif"
+                                placeholder={'Kue kering\nCoklat impor\nMug eksklusif'}
                             />
                             {errors['contents'] && (
-                                <p className="text-sm text-destructive">
-                                    {errors['contents']}
-                                </p>
+                                <p className="text-sm text-red-500">{errors['contents']}</p>
                             )}
                         </div>
-
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="grid gap-2">
-                                <Label htmlFor="price_from">
-                                    Harga Mulai (Rp)
-                                </Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="price_from">Harga Mulai (Rp)</Label>
                                 <Input
                                     id="price_from"
                                     type="number"
                                     min={0}
                                     value={data.price_from}
-                                    onChange={(e) =>
-                                        setData('price_from', e.target.value)
-                                    }
+                                    onChange={(e) => setData('price_from', e.target.value)}
                                     placeholder="150000"
                                 />
                                 {errors.price_from && (
-                                    <p className="text-sm text-destructive">
-                                        {errors.price_from}
-                                    </p>
+                                    <p className="text-sm text-red-500">{errors.price_from}</p>
                                 )}
                             </div>
-
-                            <div className="grid gap-2">
-                                <Label htmlFor="sort_order">
-                                    Urutan Tampil
-                                </Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="sort_order">Urutan</Label>
                                 <Input
                                     id="sort_order"
                                     type="number"
                                     min={0}
                                     value={data.sort_order}
-                                    onChange={(e) =>
-                                        setData('sort_order', e.target.value)
-                                    }
+                                    onChange={(e) => setData('sort_order', e.target.value)}
                                     placeholder="0"
                                 />
                             </div>
                         </div>
-
-                        <div className="grid gap-2">
+                        <div className="grid gap-1.5">
                             <Label htmlFor="image">
                                 Foto Produk{' '}
                                 {editingProduct && (
-                                    <span className="text-muted-foreground">
+                                    <span className="text-gray-400 font-normal">
                                         (kosongkan jika tidak diganti)
                                     </span>
                                 )}
@@ -405,64 +405,44 @@ export default function ProductsIndex({ products }: PageProps) {
                                 id="image"
                                 type="file"
                                 accept="image/jpg,image/jpeg,image/png,image/webp"
-                                onChange={(e) =>
-                                    setData(
-                                        'image',
-                                        e.target.files?.[0] ?? null,
-                                    )
-                                }
+                                onChange={(e) => setData('image', e.target.files?.[0] ?? null)}
                             />
                             {errors.image && (
-                                <p className="text-sm text-destructive">
-                                    {errors.image}
-                                </p>
+                                <p className="text-sm text-red-500">{errors.image}</p>
                             )}
                             {editingProduct?.image_url && !data.image && (
                                 <img
                                     src={editingProduct.image_url}
                                     alt="Foto saat ini"
-                                    className="mt-1 h-20 w-auto rounded-md object-cover"
+                                    className="mt-1 h-20 w-auto rounded-lg object-cover"
                                 />
                             )}
                         </div>
-
                         <div className="flex items-center gap-2">
                             <Checkbox
                                 id="is_active"
                                 checked={data.is_active}
-                                onCheckedChange={(checked) =>
-                                    setData('is_active', Boolean(checked))
-                                }
+                                onCheckedChange={(c) => setData('is_active', Boolean(c))}
                             />
-                            <Label htmlFor="is_active">
-                                Tampilkan di katalog
-                            </Label>
+                            <Label htmlFor="is_active">Tampilkan di katalog</Label>
                         </div>
                     </form>
-
                     <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setModalOpen(false)}
-                        >
+                        <Button variant="outline" onClick={() => setModalOpen(false)}>
                             Batal
                         </Button>
-                        <Button
-                            type="submit"
-                            form="product-form"
-                            disabled={processing}
-                        >
+                        <Button type="submit" form="product-form" disabled={processing}>
                             {processing
                                 ? 'Menyimpan...'
                                 : editingProduct
-                                  ? 'Simpan Perubahan'
-                                  : 'Tambah Produk'}
+                                  ? 'Simpan'
+                                  : 'Tambah'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            {/* Dialog konfirmasi hapus */}
+            {/* Delete dialog */}
             <Dialog
                 open={deleteTarget !== null}
                 onOpenChange={(open) => !open && setDeleteTarget(null)}
@@ -471,19 +451,13 @@ export default function ProductsIndex({ products }: PageProps) {
                     <DialogHeader>
                         <DialogTitle>Hapus Produk?</DialogTitle>
                     </DialogHeader>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-500">
                         Produk{' '}
-                        <span className="font-medium text-foreground">
-                            {deleteTarget?.name}
-                        </span>{' '}
-                        akan dihapus permanen beserta fotonya. Tindakan ini
-                        tidak dapat dibatalkan.
+                        <span className="font-medium text-gray-900">{deleteTarget?.name}</span>{' '}
+                        akan dihapus permanen beserta fotonya.
                     </p>
                     <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setDeleteTarget(null)}
-                        >
+                        <Button variant="outline" onClick={() => setDeleteTarget(null)}>
                             Batal
                         </Button>
                         <Button variant="destructive" onClick={handleDelete}>
@@ -504,12 +478,4 @@ function formatRupiah(value: number): string {
     }).format(value);
 }
 
-ProductsIndex.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        {
-            title: 'Produk',
-            href: ProductController.index(),
-        },
-    ],
-};
+ProductsIndex.layout = undefined;

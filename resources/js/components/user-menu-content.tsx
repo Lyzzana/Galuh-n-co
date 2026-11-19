@@ -1,11 +1,10 @@
 import { Link, router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 import {
-    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/dropdown';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
@@ -32,29 +31,25 @@ export function UserMenuContent({ user }: Props) {
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                    <Link
-                        className="block w-full cursor-pointer"
-                        href={edit()}
-                        prefetch
-                        onClick={cleanup}
-                    >
-                        <Settings className="mr-2" />
-                        Settings
-                    </Link>
-                </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem onClick={cleanup}>
                 <Link
-                    className="block w-full cursor-pointer"
+                    className="flex w-full items-center gap-3"
+                    href={edit()}
+                    prefetch
+                    onClick={cleanup}
+                >
+                    <Settings className="size-5" />
+                    Settings
+                </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} variant="destructive">
+                <Link
+                    className="flex w-full items-center gap-3"
                     href={logout()}
                     as="button"
-                    onClick={handleLogout}
-                    data-test="logout-button"
                 >
-                    <LogOut className="mr-2" />
+                    <LogOut className="size-5" />
                     Log out
                 </Link>
             </DropdownMenuItem>
