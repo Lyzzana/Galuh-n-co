@@ -2,10 +2,25 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string $category
+ * @property string $short_description
+ * @property array<int, string> $contents
+ * @property int $price_from
+ * @property string|null $image
+ * @property int $sort_order
+ * @property bool $is_active
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ */
 class Product extends Model
 {
     protected $fillable = [

@@ -12,7 +12,22 @@ class CatalogController extends Controller
     /**
      * Mengambil daftar produk aktif beserta kategori unik.
      *
-     * @return array{products: Collection<int, array<string, mixed>>, categories: Collection<int, mixed>}
+     * @return array{
+     *     products: Collection<int, array{
+     *         id: int,
+     *         name: string,
+     *         slug: string,
+     *         category: string,
+     *         short_description: string,
+     *         contents: array<int, string>,
+     *         price_from: int,
+     *         image: string|null,
+     *         image_url: string|null,
+     *         sort_order: int,
+     *         is_active: bool
+     *     }>,
+     *     categories: Collection<int, string>
+     * }
      */
     protected function getCatalogData(): array
     {
@@ -20,20 +35,6 @@ class CatalogController extends Controller
             ->active()
             ->get()
             ->map(function ($product) {
-                // Parse contents secara aman (array, JSON string, atau dipisah baris)
-                $contents = $product->contents;
-                if (is_string($contents)) {
-                    $decoded = json_decode($contents, true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        $contents = $decoded;
-                    } else {
-                        $contents = preg_split("/\r\n|\n|\r/", $contents) ?: [];
-                        $contents = array_values(array_filter(array_map('trim', $contents)));
-                    }
-                } elseif (! is_array($contents)) {
-                    $contents = [];
-                }
-
                 // Resolusi URL foto produk (URL eksternal atau storage symlink lokal)
                 $imageUrl = null;
                 if (! empty($product->image)) {
@@ -50,7 +51,7 @@ class CatalogController extends Controller
                     'slug' => $product->slug,
                     'category' => $product->category,
                     'short_description' => $product->short_description,
-                    'contents' => $contents,
+                    'contents' => $product->contents,
                     'price_from' => (int) $product->price_from,
                     'image' => $product->image,
                     'image_url' => $imageUrl,
@@ -59,6 +60,7 @@ class CatalogController extends Controller
                 ];
             });
 
+        /** @var Collection<int, string> $categories */
         $categories = $products->pluck('category')->unique()->values();
 
         return [
