@@ -117,7 +117,5 @@
         "resources/js/**/*.d.ts",
         "resources/js/**/*.tsx"
     ],
-    "exclude": [
-        "resources/js/free-react-tailwind-admin-dashboard-main"
-    ]
+    "exclude": ["resources/js/free-react-tailwind-admin-dashboard-main"]
 }

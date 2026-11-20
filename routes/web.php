@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route halaman utama (/). Memanggil CatalogController@index untuk mengirim data produk aktif sebagai props ke React
 Route::get('/', [CatalogController::class, 'index'])->name('home');
+Route::get('/katalog', [CatalogController::class, 'catalog'])->name('catalog');
 
 // Route untuk menerima data form inquiry corporate (method POST)
 // middleware('throttle:5,1') membatasi maksimal 5 kali pengiriman per menit per IP untuk mencegah spam

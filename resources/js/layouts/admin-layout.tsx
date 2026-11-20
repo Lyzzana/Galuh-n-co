@@ -27,8 +27,16 @@ type Props = {
 
 const navItems = [
     { href: dashboard().url, icon: LayoutGridIcon, label: 'Dashboard' },
-    { href: AdminProductController.index().url, icon: PackageIcon, label: 'Produk' },
-    { href: AdminInquiryController.index().url, icon: MessageSquareTextIcon, label: 'Inquiry' },
+    {
+        href: AdminProductController.index().url,
+        icon: PackageIcon,
+        label: 'Produk',
+    },
+    {
+        href: AdminInquiryController.index().url,
+        icon: MessageSquareTextIcon,
+        label: 'Inquiry',
+    },
     { href: '/settings/profile', icon: SettingsIcon, label: 'Pengaturan' },
 ];
 
@@ -44,7 +52,10 @@ export default function AdminLayout({ children }: Props) {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden" style={{ background: '#f5f0e8' }}>
+        <div
+            className="flex h-screen overflow-hidden"
+            style={{ background: '#f5f0e8' }}
+        >
             {/* ── Sidebar ───────────────────────────────────────────── */}
             <aside
                 className={cn(
@@ -56,7 +67,7 @@ export default function AdminLayout({ children }: Props) {
                 {/* Logo row */}
                 <div
                     className={cn(
-                        'flex items-center gap-3 px-4 mb-6',
+                        'mb-6 flex items-center gap-3 px-4',
                         collapsed && 'justify-center px-0',
                     )}
                 >
@@ -89,7 +100,11 @@ export default function AdminLayout({ children }: Props) {
                                         ? 'text-white shadow-md'
                                         : 'text-white/60 hover:bg-white/10 hover:text-white/90',
                                 )}
-                                style={isActive ? { background: '#2d5a3d' } : undefined}
+                                style={
+                                    isActive
+                                        ? { background: '#2d5a3d' }
+                                        : undefined
+                                }
                             >
                                 <item.icon className="size-4.5 shrink-0" />
                                 {!collapsed && <span>{item.label}</span>}
@@ -99,7 +114,7 @@ export default function AdminLayout({ children }: Props) {
                 </nav>
 
                 {/* User + logout */}
-                <div className="mt-auto px-2 space-y-1">
+                <div className="mt-auto space-y-1 px-2">
                     {!collapsed && auth.user && (
                         <div className="flex items-center gap-2 rounded-xl px-3 py-2.5">
                             <div
@@ -133,9 +148,11 @@ export default function AdminLayout({ children }: Props) {
                 <button
                     type="button"
                     onClick={() => setCollapsed((v) => !v)}
-                    className="absolute -right-3 top-20 flex size-6 items-center justify-center rounded-full border border-white/20 text-white/80 shadow-md transition-colors hover:text-white"
+                    className="absolute top-20 -right-3 flex size-6 items-center justify-center rounded-full border border-white/20 text-white/80 shadow-md transition-colors hover:text-white"
                     style={{ background: '#2d5a3d' }}
-                    aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    aria-label={
+                        collapsed ? 'Expand sidebar' : 'Collapse sidebar'
+                    }
                 >
                     {collapsed ? (
                         <ChevronRightIcon className="size-3.5" />
@@ -150,7 +167,10 @@ export default function AdminLayout({ children }: Props) {
                 {/* Header */}
                 <header
                     className="flex h-14 flex-shrink-0 items-center gap-3 px-4 shadow-sm"
-                    style={{ background: '#f5f0e8', borderBottom: '1px solid #e0d9cc' }}
+                    style={{
+                        background: '#f5f0e8',
+                        borderBottom: '1px solid #e0d9cc',
+                    }}
                 >
                     {/* Mobile / extra toggle */}
                     <button
@@ -205,8 +225,11 @@ export default function AdminLayout({ children }: Props) {
                 {/* Page content */}
                 <main className="flex-1 overflow-y-auto p-4">
                     <div
-                        className="min-h-full rounded-2xl shadow-sm overflow-hidden"
-                        style={{ background: '#ffffff', border: '1px solid #e0d9cc' }}
+                        className="min-h-full overflow-hidden rounded-2xl shadow-sm"
+                        style={{
+                            background: '#ffffff',
+                            border: '1px solid #e0d9cc',
+                        }}
                     >
                         {children}
                     </div>

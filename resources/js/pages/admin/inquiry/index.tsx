@@ -2,7 +2,6 @@ import { Head, router } from '@inertiajs/react';
 import { SearchIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -18,7 +17,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown';
 import InquiryController from '@/actions/App/Http/Controllers/Admin/InquiryController';
-import { dashboard } from '@/routes';
 import { cn } from '@/utils';
 
 type InquiryStatus = 'new' | 'contacted' | 'closed';
@@ -80,7 +78,8 @@ export default function InquiryIndex({ inquiries }: PageProps) {
             i.email.toLowerCase().includes(search.toLowerCase()),
     );
 
-    const countByStatus = (s: InquiryStatus) => inquiries.filter((i) => i.status === s).length;
+    const countByStatus = (s: InquiryStatus) =>
+        inquiries.filter((i) => i.status === s).length;
 
     const handleStatusChange = (inquiry: Inquiry, newStatus: InquiryStatus) => {
         if (inquiry.status === newStatus) return;
@@ -109,20 +108,34 @@ export default function InquiryIndex({ inquiries }: PageProps) {
         <>
             <Head title="Manajemen Inquiry" />
 
-            <div className="p-6 space-y-5">
+            <div className="space-y-5 p-6">
                 {/* Page title */}
-                <h1 className="text-xl font-bold text-gray-900">Daftar Inquiry</h1>
+                <h1 className="text-xl font-bold text-gray-900">
+                    Daftar Inquiry
+                </h1>
 
                 {/* Summary cards */}
                 <div className="grid grid-cols-3 gap-3">
-                    <SummaryCard label="Inquiry Baru" count={countByStatus('new')} bg="bg-emerald-800" />
-                    <SummaryCard label="Dihubungi" count={countByStatus('contacted')} bg="bg-amber-500" />
-                    <SummaryCard label="Selesai" count={countByStatus('closed')} bg="bg-stone-500" />
+                    <SummaryCard
+                        label="Inquiry Baru"
+                        count={countByStatus('new')}
+                        bg="bg-emerald-800"
+                    />
+                    <SummaryCard
+                        label="Dihubungi"
+                        count={countByStatus('contacted')}
+                        bg="bg-amber-500"
+                    />
+                    <SummaryCard
+                        label="Selesai"
+                        count={countByStatus('closed')}
+                        bg="bg-stone-500"
+                    />
                 </div>
 
                 {/* Toolbar */}
                 <div className="flex items-center gap-3">
-                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm max-w-xs">
+                    <div className="flex max-w-xs flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm">
                         <SearchIcon className="size-4 shrink-0 text-gray-400" />
                         <input
                             value={search}
@@ -131,31 +144,33 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                             className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
                         />
                     </div>
-                    <span className="text-xs text-gray-400 ml-1">{filtered.length} inquiry</span>
+                    <span className="ml-1 text-xs text-gray-400">
+                        {filtered.length} inquiry
+                    </span>
                 </div>
 
                 {/* Table */}
-                <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+                <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="border-b border-gray-100 bg-gray-50/60">
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Nama / Perusahaan
                                     </th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Kontak
                                     </th>
-                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Jml Paket
                                     </th>
-                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Budget
                                     </th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Tgl Butuh
                                     </th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Status
                                     </th>
                                     <th className="px-4 py-3" />
@@ -177,33 +192,41 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                                     filtered.map((inquiry) => (
                                         <tr
                                             key={inquiry.id}
-                                            className="hover:bg-gray-50/60 transition-colors"
+                                            className="transition-colors hover:bg-gray-50/60"
                                         >
                                             <td className="px-4 py-3.5">
                                                 <button
                                                     type="button"
                                                     className="text-left"
-                                                    onClick={() => setDetailTarget(inquiry)}
+                                                    onClick={() =>
+                                                        setDetailTarget(inquiry)
+                                                    }
                                                 >
-                                                    <p className="font-medium text-gray-900 hover:text-blue-600 transition-colors">
+                                                    <p className="font-medium text-gray-900 transition-colors hover:text-blue-600">
                                                         {inquiry.name}
                                                     </p>
-                                                    <p className="text-xs text-gray-500 mt-0.5">
+                                                    <p className="mt-0.5 text-xs text-gray-500">
                                                         {inquiry.company}
                                                     </p>
                                                 </button>
                                             </td>
                                             <td className="px-4 py-3.5">
-                                                <p className="text-gray-700">{inquiry.email}</p>
-                                                <p className="text-xs text-gray-400 mt-0.5">
+                                                <p className="text-gray-700">
+                                                    {inquiry.email}
+                                                </p>
+                                                <p className="mt-0.5 text-xs text-gray-400">
                                                     {inquiry.whatsapp_number}
                                                 </p>
                                             </td>
                                             <td className="px-4 py-3.5 text-right font-medium text-gray-900">
-                                                {inquiry.estimated_quantity.toLocaleString('id-ID')}
+                                                {inquiry.estimated_quantity.toLocaleString(
+                                                    'id-ID',
+                                                )}
                                             </td>
                                             <td className="px-4 py-3.5 text-right text-gray-700">
-                                                {formatRupiah(inquiry.budget_per_package)}
+                                                {formatRupiah(
+                                                    inquiry.budget_per_package,
+                                                )}
                                             </td>
                                             <td className="px-4 py-3.5 text-gray-600">
                                                 {inquiry.needed_date_formatted}
@@ -212,15 +235,20 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                                                 <StatusPill
                                                     status={inquiry.status}
                                                     onSelect={(s) =>
-                                                        handleStatusChange(inquiry, s)
+                                                        handleStatusChange(
+                                                            inquiry,
+                                                            s,
+                                                        )
                                                     }
                                                 />
                                             </td>
                                             <td className="px-4 py-3.5 text-right">
                                                 <button
                                                     type="button"
-                                                    onClick={() => setDeleteTarget(inquiry)}
-                                                    className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                                    onClick={() =>
+                                                        setDeleteTarget(inquiry)
+                                                    }
+                                                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
                                                 >
                                                     <Trash2Icon className="size-4" />
                                                 </button>
@@ -245,26 +273,47 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                     </DialogHeader>
                     {detailTarget && (
                         <div className="space-y-3 text-sm">
-                            <DetailRow label="Nama PIC" value={detailTarget.name} />
-                            <DetailRow label="Perusahaan" value={detailTarget.company} />
-                            <DetailRow label="Email" value={detailTarget.email} />
-                            <DetailRow label="WhatsApp" value={detailTarget.whatsapp_number} />
+                            <DetailRow
+                                label="Nama PIC"
+                                value={detailTarget.name}
+                            />
+                            <DetailRow
+                                label="Perusahaan"
+                                value={detailTarget.company}
+                            />
+                            <DetailRow
+                                label="Email"
+                                value={detailTarget.email}
+                            />
+                            <DetailRow
+                                label="WhatsApp"
+                                value={detailTarget.whatsapp_number}
+                            />
                             <DetailRow
                                 label="Jumlah Paket"
-                                value={detailTarget.estimated_quantity.toLocaleString('id-ID')}
+                                value={detailTarget.estimated_quantity.toLocaleString(
+                                    'id-ID',
+                                )}
                             />
                             <DetailRow
                                 label="Budget/Paket"
-                                value={formatRupiah(detailTarget.budget_per_package)}
+                                value={formatRupiah(
+                                    detailTarget.budget_per_package,
+                                )}
                             />
                             <DetailRow
                                 label="Tanggal Butuh"
                                 value={detailTarget.needed_date_formatted}
                             />
-                            <DetailRow label="Diterima" value={detailTarget.created_at} />
+                            <DetailRow
+                                label="Diterima"
+                                value={detailTarget.created_at}
+                            />
                             {detailTarget.notes && (
                                 <div>
-                                    <p className="font-medium text-gray-500">Catatan</p>
+                                    <p className="font-medium text-gray-500">
+                                        Catatan
+                                    </p>
                                     <p className="mt-1 rounded-lg bg-gray-50 p-3 whitespace-pre-wrap">
                                         {detailTarget.notes}
                                     </p>
@@ -273,7 +322,10 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                         </div>
                     )}
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDetailTarget(null)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setDetailTarget(null)}
+                        >
                             Tutup
                         </Button>
                     </DialogFooter>
@@ -291,11 +343,16 @@ export default function InquiryIndex({ inquiries }: PageProps) {
                     </DialogHeader>
                     <p className="text-sm text-gray-500">
                         Inquiry dari{' '}
-                        <span className="font-medium text-gray-900">{deleteTarget?.name}</span> (
-                        {deleteTarget?.company}) akan dihapus permanen.
+                        <span className="font-medium text-gray-900">
+                            {deleteTarget?.name}
+                        </span>{' '}
+                        ({deleteTarget?.company}) akan dihapus permanen.
                     </p>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setDeleteTarget(null)}
+                        >
                             Batal
                         </Button>
                         <Button variant="destructive" onClick={handleDelete}>
@@ -335,7 +392,7 @@ function StatusPill({
     const cfg = statusConfig[status];
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer">
+            <DropdownMenuTrigger className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors">
                 <span
                     className={cn(
                         'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
@@ -363,7 +420,10 @@ function StatusPill({
                             )}
                         >
                             <span
-                                className={cn('size-1.5 rounded-full', statusConfig[s].dot)}
+                                className={cn(
+                                    'size-1.5 rounded-full',
+                                    statusConfig[s].dot,
+                                )}
                             />
                             {statusConfig[s].label}
                         </span>
@@ -377,7 +437,9 @@ function StatusPill({
 function DetailRow({ label, value }: { label: string; value: string }) {
     return (
         <div className="flex gap-2">
-            <span className="w-32 shrink-0 font-medium text-gray-500">{label}</span>
+            <span className="w-32 shrink-0 font-medium text-gray-500">
+                {label}
+            </span>
             <span className="text-gray-900">{value}</span>
         </div>
     );

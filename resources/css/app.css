@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap')
+layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap')
+layer(base);
 @import 'tailwindcss';
-@plugin "@tailwindcss/forms";
-
 @import 'tw-animate-css';
+@plugin "@tailwindcss/forms";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -9,10 +12,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    --font-serif:
+        'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
+
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+
+    --color-emerald-deep: #122e21;
+    --color-emerald-dark: #163828;
+    --color-ivory: #faf7f2;
+    --color-champagne: #c5a059;
+    --color-champagne-light: #d4af37;
+    --color-espresso: #2c1e16;
+    --color-taupe: #6b5e55;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -134,6 +148,10 @@
 }
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
     * {
         @apply border-border outline-ring/50;
     }
@@ -146,9 +164,6 @@
 /* ============================================================
    TailAdmin design tokens — merged from template index.css
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap')
-layer(base);
-
 @theme {
     /* TailAdmin font */
     --font-outfit: Outfit, sans-serif;

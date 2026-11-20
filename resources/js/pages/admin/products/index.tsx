@@ -2,7 +2,6 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { PlusIcon, PencilIcon, Trash2Icon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -16,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import ProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
-import { dashboard } from '@/routes';
 import { cn } from '@/utils';
 
 type Product = {
@@ -50,16 +48,17 @@ export default function ProductsIndex({ products }: PageProps) {
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
 
-    const { data, setData, processing, errors, reset } = useForm<ProductFormData>({
-        name: '',
-        category: '',
-        short_description: '',
-        contents: '',
-        price_from: '',
-        sort_order: '0',
-        is_active: true,
-        image: null,
-    });
+    const { data, setData, processing, errors, reset } =
+        useForm<ProductFormData>({
+            name: '',
+            category: '',
+            short_description: '',
+            contents: '',
+            price_from: '',
+            sort_order: '0',
+            is_active: true,
+            image: null,
+        });
 
     const filtered = products.filter(
         (p) =>
@@ -109,12 +108,20 @@ export default function ProductsIndex({ products }: PageProps) {
             onSuccess: () => {
                 setModalOpen(false);
                 reset();
-                toast.success(editingProduct ? 'Produk diperbarui.' : 'Produk ditambahkan.');
+                toast.success(
+                    editingProduct
+                        ? 'Produk diperbarui.'
+                        : 'Produk ditambahkan.',
+                );
             },
         };
         if (editingProduct) {
             payload.append('_method', 'PUT');
-            router.post(ProductController.update(editingProduct.id).url, payload, opts);
+            router.post(
+                ProductController.update(editingProduct.id).url,
+                payload,
+                opts,
+            );
         } else {
             router.post(ProductController.store().url, payload, opts);
         }
@@ -135,10 +142,12 @@ export default function ProductsIndex({ products }: PageProps) {
         <>
             <Head title="Manajemen Produk" />
 
-            <div className="p-6 space-y-5">
+            <div className="space-y-5 p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-gray-900">Daftar Produk</h1>
+                    <h1 className="text-xl font-bold text-gray-900">
+                        Daftar Produk
+                    </h1>
                     <Button onClick={openCreate} className="gap-2 rounded-xl">
                         <PlusIcon className="size-4" />
                         Tambah Produk
@@ -148,8 +157,12 @@ export default function ProductsIndex({ products }: PageProps) {
                 {/* Summary cards */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="rounded-2xl bg-emerald-800 px-5 py-4 text-white shadow-sm">
-                        <p className="text-xs font-medium opacity-80">Total Produk</p>
-                        <p className="mt-1 text-3xl font-bold">{products.length}</p>
+                        <p className="text-xs font-medium opacity-80">
+                            Total Produk
+                        </p>
+                        <p className="mt-1 text-3xl font-bold">
+                            {products.length}
+                        </p>
                     </div>
                     <div className="rounded-2xl bg-emerald-600 px-5 py-4 text-white shadow-sm">
                         <p className="text-xs font-medium opacity-80">Aktif</p>
@@ -158,7 +171,9 @@ export default function ProductsIndex({ products }: PageProps) {
                         </p>
                     </div>
                     <div className="rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
-                        <p className="text-xs font-medium text-gray-500">Nonaktif</p>
+                        <p className="text-xs font-medium text-gray-500">
+                            Nonaktif
+                        </p>
                         <p className="mt-1 text-3xl font-bold text-gray-900">
                             {products.filter((p) => !p.is_active).length}
                         </p>
@@ -167,7 +182,7 @@ export default function ProductsIndex({ products }: PageProps) {
 
                 {/* Toolbar */}
                 <div className="flex items-center gap-3">
-                    <div className="flex flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm max-w-xs">
+                    <div className="flex max-w-xs flex-1 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 shadow-sm">
                         <SearchIcon className="size-4 shrink-0 text-gray-400" />
                         <input
                             value={search}
@@ -176,34 +191,36 @@ export default function ProductsIndex({ products }: PageProps) {
                             className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
                         />
                     </div>
-                    <span className="text-xs text-gray-400">{filtered.length} produk</span>
+                    <span className="text-xs text-gray-400">
+                        {filtered.length} produk
+                    </span>
                 </div>
 
                 {/* Table */}
-                <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+                <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="border-b border-gray-100 bg-gray-50/60">
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 w-14">
+                                    <th className="w-14 px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Foto
                                     </th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Nama
                                     </th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Kategori
                                     </th>
-                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Harga Mulai
                                     </th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Urutan
                                     </th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-center text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Status
                                     </th>
-                                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <th className="px-4 py-3 text-right text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                         Aksi
                                     </th>
                                 </tr>
@@ -224,7 +241,7 @@ export default function ProductsIndex({ products }: PageProps) {
                                     filtered.map((product) => (
                                         <tr
                                             key={product.id}
-                                            className="hover:bg-gray-50/60 transition-colors"
+                                            className="transition-colors hover:bg-gray-50/60"
                                         >
                                             <td className="px-4 py-3">
                                                 {product.image_url ? (
@@ -234,7 +251,7 @@ export default function ProductsIndex({ products }: PageProps) {
                                                         className="size-11 rounded-xl object-cover"
                                                     />
                                                 ) : (
-                                                    <div className="size-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 text-xs">
+                                                    <div className="flex size-11 items-center justify-center rounded-xl bg-gray-100 text-xs text-gray-400">
                                                         ?
                                                     </div>
                                                 )}
@@ -243,7 +260,7 @@ export default function ProductsIndex({ products }: PageProps) {
                                                 <p className="font-medium text-gray-900">
                                                     {product.name}
                                                 </p>
-                                                <p className="line-clamp-1 text-xs text-gray-400 mt-0.5">
+                                                <p className="mt-0.5 line-clamp-1 text-xs text-gray-400">
                                                     {product.short_description}
                                                 </p>
                                             </td>
@@ -251,7 +268,9 @@ export default function ProductsIndex({ products }: PageProps) {
                                                 {product.category}
                                             </td>
                                             <td className="px-4 py-3 text-right font-medium text-gray-900">
-                                                {formatRupiah(product.price_from)}
+                                                {formatRupiah(
+                                                    product.price_from,
+                                                )}
                                             </td>
                                             <td className="px-4 py-3 text-center text-gray-600">
                                                 {product.sort_order}
@@ -273,22 +292,30 @@ export default function ProductsIndex({ products }: PageProps) {
                                                                 : 'bg-gray-400',
                                                         )}
                                                     />
-                                                    {product.is_active ? 'Aktif' : 'Nonaktif'}
+                                                    {product.is_active
+                                                        ? 'Aktif'
+                                                        : 'Nonaktif'}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-right">
                                                 <div className="flex justify-end gap-1.5">
                                                     <button
                                                         type="button"
-                                                        onClick={() => openEdit(product)}
-                                                        className="rounded-lg p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-500 transition-colors"
+                                                        onClick={() =>
+                                                            openEdit(product)
+                                                        }
+                                                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-500"
                                                     >
                                                         <PencilIcon className="size-4" />
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setDeleteTarget(product)}
-                                                        className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                                                        onClick={() =>
+                                                            setDeleteTarget(
+                                                                product,
+                                                            )
+                                                        }
+                                                        className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
                                                     >
                                                         <Trash2Icon className="size-4" />
                                                     </button>
@@ -311,17 +338,25 @@ export default function ProductsIndex({ products }: PageProps) {
                             {editingProduct ? 'Edit Produk' : 'Tambah Produk'}
                         </DialogTitle>
                     </DialogHeader>
-                    <form id="product-form" onSubmit={handleSubmit} className="space-y-4">
+                    <form
+                        id="product-form"
+                        onSubmit={handleSubmit}
+                        className="space-y-4"
+                    >
                         <div className="grid gap-1.5">
                             <Label htmlFor="name">Nama Produk</Label>
                             <Input
                                 id="name"
                                 value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 placeholder="Hampers Premium A"
                             />
                             {errors.name && (
-                                <p className="text-sm text-red-500">{errors.name}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
                             )}
                         </div>
                         <div className="grid gap-1.5">
@@ -329,55 +364,79 @@ export default function ProductsIndex({ products }: PageProps) {
                             <Input
                                 id="category"
                                 value={data.category}
-                                onChange={(e) => setData('category', e.target.value)}
+                                onChange={(e) =>
+                                    setData('category', e.target.value)
+                                }
                                 placeholder="Corporate Gift"
                             />
                             {errors.category && (
-                                <p className="text-sm text-red-500">{errors.category}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.category}
+                                </p>
                             )}
                         </div>
                         <div className="grid gap-1.5">
-                            <Label htmlFor="short_description">Deskripsi Singkat</Label>
+                            <Label htmlFor="short_description">
+                                Deskripsi Singkat
+                            </Label>
                             <Textarea
                                 id="short_description"
                                 value={data.short_description}
-                                onChange={(e) => setData('short_description', e.target.value)}
+                                onChange={(e) =>
+                                    setData('short_description', e.target.value)
+                                }
                                 rows={3}
                                 placeholder="Deskripsi 1–2 kalimat..."
                             />
                             {errors.short_description && (
-                                <p className="text-sm text-red-500">{errors.short_description}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.short_description}
+                                </p>
                             )}
                         </div>
                         <div className="grid gap-1.5">
                             <Label htmlFor="contents">
                                 Isi Produk{' '}
-                                <span className="text-gray-400 font-normal">(satu per baris)</span>
+                                <span className="font-normal text-gray-400">
+                                    (satu per baris)
+                                </span>
                             </Label>
                             <Textarea
                                 id="contents"
                                 value={data.contents}
-                                onChange={(e) => setData('contents', e.target.value)}
+                                onChange={(e) =>
+                                    setData('contents', e.target.value)
+                                }
                                 rows={4}
-                                placeholder={'Kue kering\nCoklat impor\nMug eksklusif'}
+                                placeholder={
+                                    'Kue kering\nCoklat impor\nMug eksklusif'
+                                }
                             />
                             {errors['contents'] && (
-                                <p className="text-sm text-red-500">{errors['contents']}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors['contents']}
+                                </p>
                             )}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="price_from">Harga Mulai (Rp)</Label>
+                                <Label htmlFor="price_from">
+                                    Harga Mulai (Rp)
+                                </Label>
                                 <Input
                                     id="price_from"
                                     type="number"
                                     min={0}
                                     value={data.price_from}
-                                    onChange={(e) => setData('price_from', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('price_from', e.target.value)
+                                    }
                                     placeholder="150000"
                                 />
                                 {errors.price_from && (
-                                    <p className="text-sm text-red-500">{errors.price_from}</p>
+                                    <p className="text-sm text-red-500">
+                                        {errors.price_from}
+                                    </p>
                                 )}
                             </div>
                             <div className="grid gap-1.5">
@@ -387,7 +446,9 @@ export default function ProductsIndex({ products }: PageProps) {
                                     type="number"
                                     min={0}
                                     value={data.sort_order}
-                                    onChange={(e) => setData('sort_order', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('sort_order', e.target.value)
+                                    }
                                     placeholder="0"
                                 />
                             </div>
@@ -396,7 +457,7 @@ export default function ProductsIndex({ products }: PageProps) {
                             <Label htmlFor="image">
                                 Foto Produk{' '}
                                 {editingProduct && (
-                                    <span className="text-gray-400 font-normal">
+                                    <span className="font-normal text-gray-400">
                                         (kosongkan jika tidak diganti)
                                     </span>
                                 )}
@@ -405,10 +466,17 @@ export default function ProductsIndex({ products }: PageProps) {
                                 id="image"
                                 type="file"
                                 accept="image/jpg,image/jpeg,image/png,image/webp"
-                                onChange={(e) => setData('image', e.target.files?.[0] ?? null)}
+                                onChange={(e) =>
+                                    setData(
+                                        'image',
+                                        e.target.files?.[0] ?? null,
+                                    )
+                                }
                             />
                             {errors.image && (
-                                <p className="text-sm text-red-500">{errors.image}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.image}
+                                </p>
                             )}
                             {editingProduct?.image_url && !data.image && (
                                 <img
@@ -422,16 +490,27 @@ export default function ProductsIndex({ products }: PageProps) {
                             <Checkbox
                                 id="is_active"
                                 checked={data.is_active}
-                                onCheckedChange={(c) => setData('is_active', Boolean(c))}
+                                onCheckedChange={(c) =>
+                                    setData('is_active', Boolean(c))
+                                }
                             />
-                            <Label htmlFor="is_active">Tampilkan di katalog</Label>
+                            <Label htmlFor="is_active">
+                                Tampilkan di katalog
+                            </Label>
                         </div>
                     </form>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setModalOpen(false)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setModalOpen(false)}
+                        >
                             Batal
                         </Button>
-                        <Button type="submit" form="product-form" disabled={processing}>
+                        <Button
+                            type="submit"
+                            form="product-form"
+                            disabled={processing}
+                        >
                             {processing
                                 ? 'Menyimpan...'
                                 : editingProduct
@@ -453,11 +532,16 @@ export default function ProductsIndex({ products }: PageProps) {
                     </DialogHeader>
                     <p className="text-sm text-gray-500">
                         Produk{' '}
-                        <span className="font-medium text-gray-900">{deleteTarget?.name}</span>{' '}
+                        <span className="font-medium text-gray-900">
+                            {deleteTarget?.name}
+                        </span>{' '}
                         akan dihapus permanen beserta fotonya.
                     </p>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setDeleteTarget(null)}
+                        >
                             Batal
                         </Button>
                         <Button variant="destructive" onClick={handleDelete}>

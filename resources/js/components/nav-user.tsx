@@ -52,13 +52,23 @@ export function NavUser() {
                     <DropdownMenuContent
                         className="min-w-56"
                         align="end"
-                        side={isMobile ? 'bottom' : state === 'collapsed' ? 'left' : 'bottom'}
+                        side={
+                            isMobile
+                                ? 'bottom'
+                                : state === 'collapsed'
+                                  ? 'left'
+                                  : 'bottom'
+                        }
                     >
                         <div className="flex items-center gap-2 px-3 py-2">
                             <UserInfo user={auth.user} showEmail />
                         </div>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => { cleanup(); }}>
+                        <DropdownMenuItem
+                            onClick={() => {
+                                cleanup();
+                            }}
+                        >
                             <Link
                                 href={edit()}
                                 prefetch
@@ -70,7 +80,10 @@ export function NavUser() {
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout} variant="destructive">
+                        <DropdownMenuItem
+                            onClick={handleLogout}
+                            variant="destructive"
+                        >
                             <Link
                                 href={logout()}
                                 as="button"

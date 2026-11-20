@@ -2,9 +2,8 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { ArrowUpRight } from 'lucide-react';
 import * as AdminInquiryController from '@/actions/App/Http/Controllers/Admin/InquiryController';
 import * as AdminProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
-import { Badge } from '@/components/ui/badge';
-import { dashboard } from '@/routes';
 import type { Auth } from '@/types';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/utils';
 
 type Stats = {
@@ -45,12 +44,12 @@ export default function Dashboard({ stats, recent_inquiries }: PageProps) {
         <>
             <Head title="Dashboard" />
 
-            <div className="p-6 space-y-6">
+            <div className="space-y-6 p-6">
                 {/* Greeting */}
                 <div className="flex items-start justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                            Halo, {firstName}! 
+                            Halo, {firstName}!
                         </h1>
                         <p className="mt-0.5 text-sm text-gray-500">
                             Ini ringkasan aktivitas admin bulan ini.
@@ -91,8 +90,16 @@ export default function Dashboard({ stats, recent_inquiries }: PageProps) {
                     <StatCard
                         label="Inquiry Baru"
                         value={stats.new_inquiries}
-                        gradient={stats.new_inquiries > 0 ? 'from-amber-500 to-orange-500' : 'from-white to-white'}
-                        textColor={stats.new_inquiries > 0 ? 'text-white' : 'text-gray-900'}
+                        gradient={
+                            stats.new_inquiries > 0
+                                ? 'from-amber-500 to-orange-500'
+                                : 'from-white to-white'
+                        }
+                        textColor={
+                            stats.new_inquiries > 0
+                                ? 'text-white'
+                                : 'text-gray-900'
+                        }
                         border={stats.new_inquiries === 0}
                         href={AdminInquiryController.index().url}
                     />
@@ -118,9 +125,11 @@ export default function Dashboard({ stats, recent_inquiries }: PageProps) {
                     </div>
 
                     {/* Recent inquiries */}
-                    <div className="col-span-2 rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                            <p className="font-semibold text-gray-900 text-sm">Inquiry Terbaru</p>
+                    <div className="col-span-2 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                            <p className="text-sm font-semibold text-gray-900">
+                                Inquiry Terbaru
+                            </p>
                             <Link
                                 href={AdminInquiryController.index().url}
                                 className="text-xs font-medium text-emerald-700 hover:text-emerald-800"
@@ -139,8 +148,16 @@ export default function Dashboard({ stats, recent_inquiries }: PageProps) {
                                         key={inq.id}
                                         className="flex items-center gap-3 px-5 py-3"
                                     >
-                                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold" style={{ background: '#e8f0eb', color: '#2d5a3d' }}>
-                                            {inq.company.charAt(0).toUpperCase()}
+                                        <div
+                                            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold"
+                                            style={{
+                                                background: '#e8f0eb',
+                                                color: '#2d5a3d',
+                                            }}
+                                        >
+                                            {inq.company
+                                                .charAt(0)
+                                                .toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-900">
@@ -150,11 +167,16 @@ export default function Dashboard({ stats, recent_inquiries }: PageProps) {
                                                 {inq.company}
                                             </p>
                                         </div>
-                                        <div className="text-right shrink-0">
-                                            <p className="text-xs text-gray-500">{inq.needed_date}</p>
+                                        <div className="shrink-0 text-right">
+                                            <p className="text-xs text-gray-500">
+                                                {inq.needed_date}
+                                            </p>
                                             <Badge
                                                 variant="light"
-                                                color={statusConfig[inq.status].color}
+                                                color={
+                                                    statusConfig[inq.status]
+                                                        .color
+                                                }
                                                 size="sm"
                                             >
                                                 {statusConfig[inq.status].label}
@@ -196,10 +218,10 @@ function StatCard({
             )}
         >
             <div className="flex items-start justify-between">
-                <p className={cn('text-xs font-medium opacity-80', textColor)}>{label}</p>
-                <ArrowUpRight
-                    className={cn('size-4 opacity-60', textColor)}
-                />
+                <p className={cn('text-xs font-medium opacity-80', textColor)}>
+                    {label}
+                </p>
+                <ArrowUpRight className={cn('size-4 opacity-60', textColor)} />
             </div>
             <p className={cn('mt-3 text-3xl font-bold', textColor)}>
                 {value.toLocaleString('id-ID')}
@@ -231,7 +253,12 @@ function QuickActionCard({
                     : 'border-gray-200 bg-white',
             )}
         >
-            <div className={cn('text-3xl font-bold', highlight ? 'text-orange-500' : 'text-gray-900')}>
+            <div
+                className={cn(
+                    'text-3xl font-bold',
+                    highlight ? 'text-orange-500' : 'text-gray-900',
+                )}
+            >
                 {value}
             </div>
             <div>
