@@ -1,5 +1,11 @@
 import { Head, router, useForm } from '@inertiajs/react';
-import { BuildingIcon, PencilIcon, PlusIcon, SearchIcon, Trash2Icon } from 'lucide-react';
+import {
+    BuildingIcon,
+    PencilIcon,
+    PlusIcon,
+    SearchIcon,
+    Trash2Icon,
+} from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -41,13 +47,14 @@ export default function PartnersIndex({ partners }: PageProps) {
     const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<Partner | null>(null);
 
-    const { data, setData, processing, errors, reset } = useForm<PartnerFormData>({
-        name: '',
-        sector: '',
-        sort_order: '0',
-        is_active: true,
-        logo: null,
-    });
+    const { data, setData, processing, errors, reset } =
+        useForm<PartnerFormData>({
+            name: '',
+            sector: '',
+            sort_order: '0',
+            is_active: true,
+            logo: null,
+        });
 
     const filtered = partners.filter(
         (p) =>
@@ -89,14 +96,20 @@ export default function PartnersIndex({ partners }: PageProps) {
                 setModalOpen(false);
                 reset();
                 toast.success(
-                    editingPartner ? 'Partner berhasil diperbarui.' : 'Partner berhasil ditambahkan.',
+                    editingPartner
+                        ? 'Partner berhasil diperbarui.'
+                        : 'Partner berhasil ditambahkan.',
                 );
             },
         };
 
         if (editingPartner) {
             payload.append('_method', 'PUT');
-            router.post(PartnerController.update(editingPartner.id).url, payload, opts);
+            router.post(
+                PartnerController.update(editingPartner.id).url,
+                payload,
+                opts,
+            );
         } else {
             router.post(PartnerController.store().url, payload, opts);
         }
@@ -120,7 +133,9 @@ export default function PartnersIndex({ partners }: PageProps) {
             <div className="space-y-5 p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-gray-900">Partner Korporat</h1>
+                    <h1 className="text-xl font-bold text-gray-900">
+                        Partner Korporat
+                    </h1>
                     <Button onClick={openCreate} className="gap-2 rounded-xl">
                         <PlusIcon className="size-4" />
                         Tambah Partner
@@ -133,8 +148,12 @@ export default function PartnersIndex({ partners }: PageProps) {
                         className="rounded-2xl px-5 py-4 text-white shadow-sm"
                         style={{ background: '#1a3a2a' }}
                     >
-                        <p className="text-xs font-medium opacity-80">Total Partner</p>
-                        <p className="mt-1 text-3xl font-bold">{partners.length}</p>
+                        <p className="text-xs font-medium opacity-80">
+                            Total Partner
+                        </p>
+                        <p className="mt-1 text-3xl font-bold">
+                            {partners.length}
+                        </p>
                     </div>
                     <div
                         className="rounded-2xl px-5 py-4 text-white shadow-sm"
@@ -146,7 +165,9 @@ export default function PartnersIndex({ partners }: PageProps) {
                         </p>
                     </div>
                     <div className="rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
-                        <p className="text-xs font-medium text-gray-500">Nonaktif</p>
+                        <p className="text-xs font-medium text-gray-500">
+                            Nonaktif
+                        </p>
                         <p className="mt-1 text-3xl font-bold text-gray-900">
                             {partners.filter((p) => !p.is_active).length}
                         </p>
@@ -164,7 +185,9 @@ export default function PartnersIndex({ partners }: PageProps) {
                             className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400"
                         />
                     </div>
-                    <span className="text-xs text-gray-400">{filtered.length} partner</span>
+                    <span className="text-xs text-gray-400">
+                        {filtered.length} partner
+                    </span>
                 </div>
 
                 {/* Table */}
@@ -218,7 +241,8 @@ export default function PartnersIndex({ partners }: PageProps) {
                                                         alt={partner.name}
                                                         className="h-11 w-16 rounded-lg object-contain"
                                                         style={{
-                                                            background: '#f8f8f8',
+                                                            background:
+                                                                '#f8f8f8',
                                                             padding: '4px',
                                                         }}
                                                     />
@@ -235,7 +259,9 @@ export default function PartnersIndex({ partners }: PageProps) {
                                             </td>
                                             <td className="px-4 py-3 text-gray-500">
                                                 {partner.sector ?? (
-                                                    <span className="italic text-gray-300">—</span>
+                                                    <span className="text-gray-300 italic">
+                                                        —
+                                                    </span>
                                                 )}
                                             </td>
                                             <td className="px-4 py-3 text-center text-gray-600">
@@ -258,21 +284,29 @@ export default function PartnersIndex({ partners }: PageProps) {
                                                                 : 'bg-gray-400',
                                                         )}
                                                     />
-                                                    {partner.is_active ? 'Aktif' : 'Nonaktif'}
+                                                    {partner.is_active
+                                                        ? 'Aktif'
+                                                        : 'Nonaktif'}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-right">
                                                 <div className="flex justify-end gap-1.5">
                                                     <button
                                                         type="button"
-                                                        onClick={() => openEdit(partner)}
+                                                        onClick={() =>
+                                                            openEdit(partner)
+                                                        }
                                                         className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-500"
                                                     >
                                                         <PencilIcon className="size-4" />
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setDeleteTarget(partner)}
+                                                        onClick={() =>
+                                                            setDeleteTarget(
+                                                                partner,
+                                                            )
+                                                        }
                                                         className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
                                                     >
                                                         <Trash2Icon className="size-4" />
@@ -297,33 +331,47 @@ export default function PartnersIndex({ partners }: PageProps) {
                         </DialogTitle>
                     </DialogHeader>
 
-                    <form id="partner-form" onSubmit={handleSubmit} className="space-y-4">
+                    <form
+                        id="partner-form"
+                        onSubmit={handleSubmit}
+                        className="space-y-4"
+                    >
                         <div className="grid gap-1.5">
                             <Label htmlFor="name">Nama Perusahaan</Label>
                             <Input
                                 id="name"
                                 value={data.name}
-                                onChange={(e) => setData('name', e.target.value)}
+                                onChange={(e) =>
+                                    setData('name', e.target.value)
+                                }
                                 placeholder="PT. Contoh Nusantara"
                             />
                             {errors.name && (
-                                <p className="text-sm text-red-500">{errors.name}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.name}
+                                </p>
                             )}
                         </div>
 
                         <div className="grid gap-1.5">
                             <Label htmlFor="sector">
                                 Sektor / Keterangan{' '}
-                                <span className="font-normal text-gray-400">(opsional)</span>
+                                <span className="font-normal text-gray-400">
+                                    (opsional)
+                                </span>
                             </Label>
                             <Input
                                 id="sector"
                                 value={data.sector}
-                                onChange={(e) => setData('sector', e.target.value)}
+                                onChange={(e) =>
+                                    setData('sector', e.target.value)
+                                }
                                 placeholder="FMCG, Perbankan, Teknologi..."
                             />
                             {errors.sector && (
-                                <p className="text-sm text-red-500">{errors.sector}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.sector}
+                                </p>
                             )}
                         </div>
 
@@ -340,10 +388,14 @@ export default function PartnersIndex({ partners }: PageProps) {
                                 id="logo"
                                 type="file"
                                 accept="image/png,image/jpg,image/jpeg,image/svg+xml,image/webp"
-                                onChange={(e) => setData('logo', e.target.files?.[0] ?? null)}
+                                onChange={(e) =>
+                                    setData('logo', e.target.files?.[0] ?? null)
+                                }
                             />
                             {errors.logo && (
-                                <p className="text-sm text-red-500">{errors.logo}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.logo}
+                                </p>
                             )}
                             {/* Preview logo existing */}
                             {editingPartner?.logo_url && !data.logo && (
@@ -352,22 +404,31 @@ export default function PartnersIndex({ partners }: PageProps) {
                                         src={editingPartner.logo_url}
                                         alt="Logo saat ini"
                                         className="h-12 w-auto rounded-lg object-contain"
-                                        style={{ background: '#f8f8f8', padding: '4px' }}
+                                        style={{
+                                            background: '#f8f8f8',
+                                            padding: '4px',
+                                        }}
                                     />
-                                    <span className="text-xs text-gray-400">Logo saat ini</span>
+                                    <span className="text-xs text-gray-400">
+                                        Logo saat ini
+                                    </span>
                                 </div>
                             )}
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="sort_order">Urutan Tampil</Label>
+                                <Label htmlFor="sort_order">
+                                    Urutan Tampil
+                                </Label>
                                 <Input
                                     id="sort_order"
                                     type="number"
                                     min={0}
                                     value={data.sort_order}
-                                    onChange={(e) => setData('sort_order', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('sort_order', e.target.value)
+                                    }
                                     placeholder="0"
                                 />
                             </div>
@@ -377,17 +438,28 @@ export default function PartnersIndex({ partners }: PageProps) {
                             <Checkbox
                                 id="is_active"
                                 checked={data.is_active}
-                                onCheckedChange={(c) => setData('is_active', Boolean(c))}
+                                onCheckedChange={(c) =>
+                                    setData('is_active', Boolean(c))
+                                }
                             />
-                            <Label htmlFor="is_active">Tampilkan di halaman publik</Label>
+                            <Label htmlFor="is_active">
+                                Tampilkan di halaman publik
+                            </Label>
                         </div>
                     </form>
 
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setModalOpen(false)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setModalOpen(false)}
+                        >
                             Batal
                         </Button>
-                        <Button type="submit" form="partner-form" disabled={processing}>
+                        <Button
+                            type="submit"
+                            form="partner-form"
+                            disabled={processing}
+                        >
                             {processing
                                 ? 'Menyimpan...'
                                 : editingPartner
@@ -409,11 +481,16 @@ export default function PartnersIndex({ partners }: PageProps) {
                     </DialogHeader>
                     <p className="text-sm text-gray-500">
                         Partner{' '}
-                        <span className="font-medium text-gray-900">{deleteTarget?.name}</span>{' '}
+                        <span className="font-medium text-gray-900">
+                            {deleteTarget?.name}
+                        </span>{' '}
                         akan dihapus permanen beserta logonya.
                     </p>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setDeleteTarget(null)}
+                        >
                             Batal
                         </Button>
                         <Button variant="destructive" onClick={handleDelete}>

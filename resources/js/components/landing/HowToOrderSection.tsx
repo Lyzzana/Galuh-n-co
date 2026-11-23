@@ -6,7 +6,6 @@ import {
     MessageSquareTextIcon,
     TruckIcon,
 } from 'lucide-react';
-import SectionDivider from '@/components/landing/SectionDivider';
 
 const FADE_UP_VARIANTS: Variants = {
     hidden: { opacity: 0, y: 24 },

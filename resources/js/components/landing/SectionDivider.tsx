@@ -16,8 +16,11 @@ interface SectionDividerProps {
     variant?: 'light' | 'dark';
 }
 
-export default function SectionDivider({ variant = 'light' }: SectionDividerProps) {
-    const lineColor = variant === 'dark' ? 'rgba(197,160,89,0.25)' : 'rgba(197,160,89,0.35)';
+export default function SectionDivider({
+    variant = 'light',
+}: SectionDividerProps) {
+    const lineColor =
+        variant === 'dark' ? 'rgba(197,160,89,0.25)' : 'rgba(197,160,89,0.35)';
     const dotColor = variant === 'dark' ? '#C5A059' : '#C5A059';
     const bgPin = variant === 'dark' ? '#122E21' : '#FAF7F2';
     const textColor = variant === 'dark' ? '#C5A059' : '#C5A059';

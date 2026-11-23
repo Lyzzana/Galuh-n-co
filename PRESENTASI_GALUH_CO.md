@@ -1,5 +1,7 @@
 # PRESENTASI_GALUH_CO.md
+
 ## Materi Presentasi & Panduan Tanya Jawab
+
 ### Website "Galuh & Co." — Curated Luxury Hampers & Corporate Gifting
 
 ---
@@ -24,6 +26,7 @@
 ```
 
 **📌 Teks di Layar:**
+
 - Galuh & Co. — Platform Hampers Mewah
 - Full-Stack: Laravel 13 + React 19 + Inertia v3
 - Dua sisi: Publik (B2C/B2B) + Admin Panel
@@ -37,6 +40,7 @@ Ini adalah website e-commerce hampers premium dengan dua lapisan: halaman publik
 ## SLIDE 2 — MASALAH & SOLUSI BISNIS
 
 **📌 Teks di Layar:**
+
 - **Masalah:** Proses order manual via WA, tidak terdokumentasi
 - **Masalah:** Tidak ada etalase digital yang representatif
 - **Masalah:** Klien korporat tidak punya jalur resmi inquiry
@@ -50,6 +54,7 @@ Sebelumnya seluruh proses pemesanan berlangsung via chat WhatsApp yang rawan ter
 ## SLIDE 3 — IDENTITAS VISUAL "WARM LUXURY"
 
 **📌 Teks di Layar:**
+
 - Palet: Emerald Deep `#122E21` + Champagne Gold `#C5A059`
 - Tipografi: Playfair Display (serif) + Plus Jakarta Sans
 - Animasi: Motion.js — masuk halaman, foto melayang, typewriter
@@ -63,6 +68,7 @@ Desain visual diabstraksikan menjadi design token di `app.css` — semua warna b
 ## SLIDE 4 — ALUR USER JOURNEY
 
 **📌 Teks di Layar:**
+
 - **Hero** → Typewriter headline berputar · foto produk melayang
 - **Katalog** → Filter kategori · modal detail produk
 - **Corporate** → Form inquiry · marquee partner korporat
@@ -76,6 +82,7 @@ User journey dirancang linier dari awareness hingga konversi. Hero Section memba
 ## SLIDE 5 — ARSITEKTUR TEKNOLOGI
 
 **📌 Teks di Layar:**
+
 - **Backend:** Laravel 13 · PHP 8.3 · MySQL
 - **Frontend:** React 19 · TypeScript · Tailwind CSS v4
 - **Bridge:** Inertia v3 (SPA tanpa REST API)
@@ -89,6 +96,7 @@ Inertia.js bertindak sebagai jembatan antara Laravel dan React — tidak perlu m
 ## SLIDE 6 — PANEL ADMIN & KEAMANAN
 
 **📌 Teks di Layar:**
+
 - 4 modul: Produk · Inquiry · Partner · Dashboard
 - Guard berlapis: `auth` → `verified` → `is_admin`
 - Anti-spam: throttle 5 req/mnt + honeypot field
@@ -102,6 +110,7 @@ Keamanan diimplementasi dalam tujuh lapisan yang saling melengkapi. Middleware `
 ## SLIDE 7 — FITUR ADMIN: PRODUK & INQUIRY
 
 **📌 Teks di Layar:**
+
 - Produk: CRUD modal · upload foto · slug otomatis · sort order
 - Inquiry: status pill dropdown · detail dialog · hapus
 - Storage: file lama auto-delete saat ganti/hapus
@@ -115,6 +124,7 @@ Semua operasi CRUD di admin menggunakan modal dialog dalam satu halaman, tanpa n
 ## SLIDE 8 — FITUR PARTNER KORPORAT & MARQUEE
 
 **📌 Teks di Layar:**
+
 - Admin upload logo partner → tampil otomatis di landing page
 - Infinite marquee: duplikasi 2× · masking tepi · pause on hover
 - Fallback: monogram huruf pertama jika logo belum diupload
@@ -128,6 +138,7 @@ Marquee diimplementasi tanpa library eksternal — menggunakan CSS `@keyframes` 
 ## SLIDE 9 — SKENARIO LIVE DEMO (3 Menit)
 
 **📌 Teks di Layar:**
+
 - **Mnt 1:** Buka `/` → hero typewriter → scroll ke katalog → klik produk
 - **Mnt 2:** Scroll ke Corporate → isi form inquiry (data dummy)
 - **Mnt 3:** Login admin → Dashboard → ubah status inquiry → tambah produk
@@ -140,6 +151,7 @@ Demonstrasi dirancang mengalir dari perspektif pengunjung biasa ke admin. Menit 
 ## SLIDE 10 — PENGEMBANGAN SELANJUTNYA
 
 **📌 Teks di Layar:**
+
 - **Fase 2:** Keranjang belanja + payment gateway (Midtrans)
 - **Fase 3:** Tracking order real-time + notifikasi WhatsApp API
 - **Fase 4:** Dashboard analytics (revenue, conversion rate)
@@ -149,6 +161,7 @@ Demonstrasi dirancang mengalir dari perspektif pengunjung biasa ke admin. Menit 
 Arsitektur yang ada sudah menyiapkan fondasi untuk pengembangan lanjutan. Model `Inquiry` dapat diperluas menjadi `Order` dengan tambahan kolom payment status. Database sudah menggunakan struktur yang bersih dengan foreign key relations yang mudah ditambahkan. Laravel Cloud memungkinkan deployment production dengan autoscaling tanpa konfigurasi server manual.
 
 ---
+
 ---
 
 # BAGIAN 2 — CHEAT SHEET DETAIL TEKNIS
@@ -159,63 +172,63 @@ Arsitektur yang ada sudah menyiapkan fondasi untuk pengembangan lanjutan. Model 
 
 ## 2.1 Animasi & UI Effects
 
-| Fitur | Detail Implementasi | File |
-|---|---|---|
-| **Rotating Typewriter Hero** | Hook `useRotatingTypewriter` — state machine 4 fase: `typing → pausing → erasing → switching`. Kata bergilir: Istimewa / Korporat / Hari Raya / Pernikahan. Speed: 85ms ketik, 50ms hapus | `HeroSection.tsx` |
-| **Zero Layout Shift (CLS)** | Container kata rotating pakai `invisible` ghost text (kata terpanjang "Pernikahan") untuk lock lebar minimum. Kata aktual di-`absolute` di atasnya | `HeroSection.tsx` |
-| **Kursor Typewriter** | CSS `@keyframes cursor-blink`: opacity 1→1 (0–45%) → 0 (55%) → 1 (100%), durasi 1.1s ease-in-out. Disembunyikan saat jeda panjang setelah kata penuh | `app.css` + `HeroSection.tsx` |
-| **`prefers-reduced-motion`** | Dua lapis: `MotionConfig reducedMotion="user"` di root untuk semua motion, + `window.matchMedia` check di `useRotatingTypewriter` untuk typewriter | `welcome.tsx` + `HeroSection.tsx` |
-| **Foto Produk Melayang** | `motion.div` dengan `y: [0, floatY, 0]` looping tak terbatas. Tiap foto: durasi 4.8–6s, delay 0.2–0.55s berbeda-beda → efek organik | `HeroSection.tsx` |
-| **Partner Marquee** | CSS `animate-marquee` (translateX 0→-50%), array partner diduplikasi 2×, `mask-image` linear-gradient fade tepi, `group-hover:[animation-play-state:paused]` | `app.css` + `CorporateSection.tsx` |
-| **Entrance Animations** | `containerVariants staggerChildren: 0.15` + `fadeUpVariant` (y: 22→0, opacity 0→1, ease `[0.16, 1, 0.3, 1]`) di semua section | seluruh landing components |
-| **Trigger viewport** | `useInView(ref, { once: true, margin: '-80px' })` — animasi mulai saat elemen 80px sebelum masuk viewport, tidak berulang | `HeroSection.tsx` |
+| Fitur                        | Detail Implementasi                                                                                                                                                                       | File                               |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| **Rotating Typewriter Hero** | Hook `useRotatingTypewriter` — state machine 4 fase: `typing → pausing → erasing → switching`. Kata bergilir: Istimewa / Korporat / Hari Raya / Pernikahan. Speed: 85ms ketik, 50ms hapus | `HeroSection.tsx`                  |
+| **Zero Layout Shift (CLS)**  | Container kata rotating pakai `invisible` ghost text (kata terpanjang "Pernikahan") untuk lock lebar minimum. Kata aktual di-`absolute` di atasnya                                        | `HeroSection.tsx`                  |
+| **Kursor Typewriter**        | CSS `@keyframes cursor-blink`: opacity 1→1 (0–45%) → 0 (55%) → 1 (100%), durasi 1.1s ease-in-out. Disembunyikan saat jeda panjang setelah kata penuh                                      | `app.css` + `HeroSection.tsx`      |
+| **`prefers-reduced-motion`** | Dua lapis: `MotionConfig reducedMotion="user"` di root untuk semua motion, + `window.matchMedia` check di `useRotatingTypewriter` untuk typewriter                                        | `welcome.tsx` + `HeroSection.tsx`  |
+| **Foto Produk Melayang**     | `motion.div` dengan `y: [0, floatY, 0]` looping tak terbatas. Tiap foto: durasi 4.8–6s, delay 0.2–0.55s berbeda-beda → efek organik                                                       | `HeroSection.tsx`                  |
+| **Partner Marquee**          | CSS `animate-marquee` (translateX 0→-50%), array partner diduplikasi 2×, `mask-image` linear-gradient fade tepi, `group-hover:[animation-play-state:paused]`                              | `app.css` + `CorporateSection.tsx` |
+| **Entrance Animations**      | `containerVariants staggerChildren: 0.15` + `fadeUpVariant` (y: 22→0, opacity 0→1, ease `[0.16, 1, 0.3, 1]`) di semua section                                                             | seluruh landing components         |
+| **Trigger viewport**         | `useInView(ref, { once: true, margin: '-80px' })` — animasi mulai saat elemen 80px sebelum masuk viewport, tidak berulang                                                                 | `HeroSection.tsx`                  |
 
 ---
 
 ## 2.2 Filter Katalog & Modal Produk
 
-| Fitur | Detail | File |
-|---|---|---|
-| **Filter Kategori Dinamis** | Kategori diambil dari `products.pluck('category').unique()` di controller — tidak hard-coded | `CatalogController.php` |
-| **State Filter** | `useState` aktif kategori, filter dilakukan client-side di array produk yang sudah di-pass sebagai Inertia props | `CatalogSection.tsx` |
-| **Modal Detail Produk** | Triggered dari klik thumbnail/nama produk. Menampilkan: gambar, nama, kategori, harga, deskripsi, daftar isi, tombol inquiry via WA | `CatalogSection.tsx` |
-| **Fallback Gambar** | URL eksternal (Unsplash) atau lokal via `asset('storage/...')`. Deteksi via `str_starts_with($image, 'http')` | `CatalogController.php` |
+| Fitur                       | Detail                                                                                                                              | File                    |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| **Filter Kategori Dinamis** | Kategori diambil dari `products.pluck('category').unique()` di controller — tidak hard-coded                                        | `CatalogController.php` |
+| **State Filter**            | `useState` aktif kategori, filter dilakukan client-side di array produk yang sudah di-pass sebagai Inertia props                    | `CatalogSection.tsx`    |
+| **Modal Detail Produk**     | Triggered dari klik thumbnail/nama produk. Menampilkan: gambar, nama, kategori, harga, deskripsi, daftar isi, tombol inquiry via WA | `CatalogSection.tsx`    |
+| **Fallback Gambar**         | URL eksternal (Unsplash) atau lokal via `asset('storage/...')`. Deteksi via `str_starts_with($image, 'http')`                       | `CatalogController.php` |
 
 ---
 
 ## 2.3 Keamanan & Validasi
 
-| Mekanisme | Detail | File |
-|---|---|---|
-| **Throttle** | `middleware('throttle:5,1')` pada `POST /inquiries` — 5 request/menit/IP | `routes/web.php` |
-| **Honeypot** | Field `website` hidden: `tabIndex={-1}`, rule `prohibited`, dibuang via `safe()->except(['website'])` | `StoreInquiryRequest.php`, `InquiryController.php` |
-| **EnsureAdmin** | Cek `$request->user()?->is_admin`, abort 403 jika false | `EnsureAdmin.php` |
-| **Double-check Admin** | `UpdateInquiryRequest::authorize()` juga cek `is_admin === true` | `UpdateInquiryRequest.php` |
-| **Validasi Status** | `'status' => ['required', 'in:new,contacted,closed']` — hanya 3 nilai yang valid | `UpdateInquiryRequest.php` |
-| **Cookie Encryption** | Semua cookie dienkripsi kecuali `appearance` dan `sidebar_state` | `bootstrap/app.php` |
-| **CSRF** | Otomatis via Inertia middleware + Laravel default | Inertia middleware |
+| Mekanisme              | Detail                                                                                                | File                                               |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| **Throttle**           | `middleware('throttle:5,1')` pada `POST /inquiries` — 5 request/menit/IP                              | `routes/web.php`                                   |
+| **Honeypot**           | Field `website` hidden: `tabIndex={-1}`, rule `prohibited`, dibuang via `safe()->except(['website'])` | `StoreInquiryRequest.php`, `InquiryController.php` |
+| **EnsureAdmin**        | Cek `$request->user()?->is_admin`, abort 403 jika false                                               | `EnsureAdmin.php`                                  |
+| **Double-check Admin** | `UpdateInquiryRequest::authorize()` juga cek `is_admin === true`                                      | `UpdateInquiryRequest.php`                         |
+| **Validasi Status**    | `'status' => ['required', 'in:new,contacted,closed']` — hanya 3 nilai yang valid                      | `UpdateInquiryRequest.php`                         |
+| **Cookie Encryption**  | Semua cookie dienkripsi kecuali `appearance` dan `sidebar_state`                                      | `bootstrap/app.php`                                |
+| **CSRF**               | Otomatis via Inertia middleware + Laravel default                                                     | Inertia middleware                                 |
 
 ---
 
 ## 2.4 Storage & File Management
 
-| Fitur | Detail | File |
-|---|---|---|
-| **Upload Produk** | `$request->file('image')->store('products', 'public')` → simpan ke `storage/app/public/products/` | `ProductController.php` |
-| **Upload Partner** | `$request->file('logo')->store('partners', 'public')` → `storage/app/public/partners/` | `PartnerController.php` |
+| Fitur               | Detail                                                                                                         | File                                             |
+| ------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **Upload Produk**   | `$request->file('image')->store('products', 'public')` → simpan ke `storage/app/public/products/`              | `ProductController.php`                          |
+| **Upload Partner**  | `$request->file('logo')->store('partners', 'public')` → `storage/app/public/partners/`                         | `PartnerController.php`                          |
 | **Hapus File Lama** | `Storage::disk('public')->delete($oldPath)` dipanggil sebelum simpan file baru (update) dan saat delete record | `ProductController.php`, `PartnerController.php` |
-| **Storage Link** | Perlu `php artisan storage:link` untuk symlink `public/storage → storage/app/public` | Artisan command |
+| **Storage Link**    | Perlu `php artisan storage:link` untuk symlink `public/storage → storage/app/public`                           | Artisan command                                  |
 
 ---
 
 ## 2.5 Laravel Wayfinder (Type-safe Routing)
 
-| Aspek | Detail | File |
-|---|---|---|
-| **Generate** | `php artisan wayfinder:generate` → buat TypeScript functions di `resources/js/actions/` | Auto via Vite plugin |
-| **Penggunaan** | `ProductController.store().url`, `ProductController.destroy(id)` — tidak ada string URL di-hardcode | semua admin pages |
-| **Route Parameters** | Wayfinder resolve parameter otomatis: `update(id)` → `/admin/products/{id}` | `PartnerController.ts` dll |
-| **Re-generate** | Otomatis saat `npm run dev` via Vite plugin `@laravel/vite-plugin-wayfinder` | `vite.config.ts` |
+| Aspek                | Detail                                                                                              | File                       |
+| -------------------- | --------------------------------------------------------------------------------------------------- | -------------------------- |
+| **Generate**         | `php artisan wayfinder:generate` → buat TypeScript functions di `resources/js/actions/`             | Auto via Vite plugin       |
+| **Penggunaan**       | `ProductController.store().url`, `ProductController.destroy(id)` — tidak ada string URL di-hardcode | semua admin pages          |
+| **Route Parameters** | Wayfinder resolve parameter otomatis: `update(id)` → `/admin/products/{id}`                         | `PartnerController.ts` dll |
+| **Re-generate**      | Otomatis saat `npm run dev` via Vite plugin `@laravel/vite-plugin-wayfinder`                        | `vite.config.ts`           |
 
 ---
 
@@ -248,6 +261,7 @@ sessions      → id, user_id, ip_address, user_agent, payload
 ```
 
 ---
+
 ---
 
 # BAGIAN 3 — BANK PERTANYAAN KRITIS & JAWABAN
@@ -319,6 +333,7 @@ Container kata rotating menggunakan teknik "ghost text" — kata terpanjang (`"P
 
 **Bukti di Kode:**
 `HeroSection.tsx`:
+
 ```tsx
 <span className="invisible select-none whitespace-nowrap">
   {longestWord(ROTATING_WORDS)}  {/* "Pernikahan" */}
@@ -432,5 +447,5 @@ Inertia v3 mendukung layout inference berbasis nama halaman di `createInertiaApp
 
 ---
 
-*File ini dibuat otomatis dari analisis codebase proyek Galuh & Co.*
-*Versi: 1.0 — Tanggal: Sesuai tanggal presentasi*
+_File ini dibuat otomatis dari analisis codebase proyek Galuh & Co._
+_Versi: 1.0 — Tanggal: Sesuai tanggal presentasi_

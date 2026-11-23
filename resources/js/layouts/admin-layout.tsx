@@ -29,9 +29,21 @@ type Props = {
 
 const navItems = [
     { href: dashboard().url, icon: LayoutGridIcon, label: 'Dashboard' },
-    { href: AdminProductController.index().url, icon: PackageIcon, label: 'Produk' },
-    { href: AdminInquiryController.index().url, icon: MessageSquareTextIcon, label: 'Inquiry' },
-    { href: AdminPartnerController.index().url, icon: BuildingIcon, label: 'Partner' },
+    {
+        href: AdminProductController.index().url,
+        icon: PackageIcon,
+        label: 'Produk',
+    },
+    {
+        href: AdminInquiryController.index().url,
+        icon: MessageSquareTextIcon,
+        label: 'Inquiry',
+    },
+    {
+        href: AdminPartnerController.index().url,
+        icon: BuildingIcon,
+        label: 'Partner',
+    },
     { href: '/settings/profile', icon: SettingsIcon, label: 'Pengaturan' },
 ];
 

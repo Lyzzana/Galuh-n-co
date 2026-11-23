@@ -79,10 +79,10 @@ export default function CatalogSection({
         activeCategory === 'Semua'
             ? items
             : items.filter(
-                (p) =>
-                    p.category?.toLowerCase() ===
-                    activeCategory.toLowerCase(),
-            );
+                  (p) =>
+                      p.category?.toLowerCase() ===
+                      activeCategory.toLowerCase(),
+              );
 
     const displayedProducts = filteredProducts.slice(0, 8);
 
@@ -119,10 +119,11 @@ export default function CatalogSection({
                                         onClick={() =>
                                             setActiveCategory(category)
                                         }
-                                        className={`rounded-full px-5 py-2 font-sans text-xs font-medium tracking-wide transition-all duration-300 ${isActive
-                                            ? 'bg-[#163828] text-[#FAF7F2] shadow-sm'
-                                            : 'border border-[#E5DEC9] bg-white/80 text-[#6B5E55] hover:border-[#C5A059] hover:text-[#163828]'
-                                            }`}
+                                        className={`rounded-full px-5 py-2 font-sans text-xs font-medium tracking-wide transition-all duration-300 ${
+                                            isActive
+                                                ? 'bg-[#163828] text-[#FAF7F2] shadow-sm'
+                                                : 'border border-[#E5DEC9] bg-white/80 text-[#6B5E55] hover:border-[#C5A059] hover:text-[#163828]'
+                                        }`}
                                     >
                                         {category}
                                     </button>
@@ -225,7 +226,7 @@ export default function CatalogSection({
                                             {/* Inner hairline ring — kesan bingkai kemasan */}
                                             <div
                                                 aria-hidden="true"
-                                                className="pointer-events-none absolute inset-[6px] rounded-[6px] ring-1 ring-inset ring-[#C5A059]/20 transition-all duration-300 group-hover:ring-[#C5A059]/38"
+                                                className="pointer-events-none absolute inset-[6px] rounded-[6px] ring-1 ring-[#C5A059]/20 transition-all duration-300 ring-inset group-hover:ring-[#C5A059]/38"
                                             />
                                             <span className="absolute top-3 left-3 rounded-full border border-[#C5A059]/35 bg-[#FAF7F2]/90 px-2.5 py-0.5 font-sans text-[10px] font-semibold tracking-wider text-[#163828] uppercase backdrop-blur-xs">
                                                 {product.category}
@@ -393,8 +394,8 @@ export default function CatalogSection({
                                             </h4>
                                             <ul className="mt-3 space-y-2">
                                                 {selectedProduct.contents &&
-                                                    selectedProduct.contents
-                                                        .length > 0 ? (
+                                                selectedProduct.contents
+                                                    .length > 0 ? (
                                                     selectedProduct.contents.map(
                                                         (item, idx) => (
                                                             <li

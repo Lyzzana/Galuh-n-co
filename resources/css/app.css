@@ -1,5 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap') layer(base);
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap') layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap')
+layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap')
+layer(base);
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/forms";
@@ -281,15 +283,19 @@
     grid-template-rows: 1fr;
 }
 
-.menu-accordion>div {
+.menu-accordion > div {
     overflow: hidden;
     min-height: 0;
 }
 
 /* ── Partner marquee animation ───────────────────────────────────── */
 @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .animate-marquee {
@@ -304,9 +310,16 @@
 
 /* ── Typewriter cursor — smooth luxury blink ─────────────────────── */
 @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    45%       { opacity: 1; }
-    55%       { opacity: 0; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    45% {
+        opacity: 1;
+    }
+    55% {
+        opacity: 0;
+    }
 }
 
 .animate-cursor-blink {

@@ -39,7 +39,7 @@ const CIRCLE_CONFIGS = [
         sizeClass: 'size-36 md:size-44 lg:size-52',
         floatY: -10,
         floatDuration: 5.6,
-        revealDelay: 0.60,
+        revealDelay: 0.6,
     },
     {
         id: 'bottom-right',
@@ -47,7 +47,7 @@ const CIRCLE_CONFIGS = [
         sizeClass: 'size-30 md:size-36 lg:size-44',
         floatY: 12,
         floatDuration: 4.8,
-        revealDelay: 0.70,
+        revealDelay: 0.7,
     },
 ];
 
@@ -84,7 +84,11 @@ function useRotatingTypewriter(
 
     useEffect(() => {
         if (!active || reducedMotion) {
-            setState({ displayText: words[0] ?? '', wordIndex: 0, phase: 'pausing' });
+            setState({
+                displayText: words[0] ?? '',
+                wordIndex: 0,
+                phase: 'pausing',
+            });
             return;
         }
 
@@ -94,7 +98,14 @@ function useRotatingTypewriter(
         if (phase === 'typing') {
             if (displayText.length < currentWord.length) {
                 const t = setTimeout(
-                    () => setState((s) => ({ ...s, displayText: currentWord.slice(0, s.displayText.length + 1) })),
+                    () =>
+                        setState((s) => ({
+                            ...s,
+                            displayText: currentWord.slice(
+                                0,
+                                s.displayText.length + 1,
+                            ),
+                        })),
                     typeSpeed,
                 );
                 return () => clearTimeout(t);
@@ -104,14 +115,21 @@ function useRotatingTypewriter(
         }
 
         if (phase === 'pausing') {
-            const t = setTimeout(() => setState((s) => ({ ...s, phase: 'erasing' })), pauseAfterType);
+            const t = setTimeout(
+                () => setState((s) => ({ ...s, phase: 'erasing' })),
+                pauseAfterType,
+            );
             return () => clearTimeout(t);
         }
 
         if (phase === 'erasing') {
             if (displayText.length > 0) {
                 const t = setTimeout(
-                    () => setState((s) => ({ ...s, displayText: s.displayText.slice(0, -1) })),
+                    () =>
+                        setState((s) => ({
+                            ...s,
+                            displayText: s.displayText.slice(0, -1),
+                        })),
                     eraseSpeed,
                 );
                 return () => clearTimeout(t);
@@ -123,12 +141,17 @@ function useRotatingTypewriter(
         if (phase === 'switching') {
             const nextIndex = (wordIndex + 1) % words.length;
             const t = setTimeout(
-                () => setState({ displayText: '', wordIndex: nextIndex, phase: 'typing' }),
+                () =>
+                    setState({
+                        displayText: '',
+                        wordIndex: nextIndex,
+                        phase: 'typing',
+                    }),
                 pauseAfterErase,
             );
             return () => clearTimeout(t);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state, active, reducedMotion]);
 
     return {
@@ -197,25 +220,33 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
         reducedMotion: shouldReduceMotion,
     });
 
-    const productsWithImages = products.filter((p) => Boolean(p.image_url) && p.image_url !== '');
+    const productsWithImages = products.filter(
+        (p) => Boolean(p.image_url) && p.image_url !== '',
+    );
 
     const heroImages = CIRCLE_CONFIGS.map((cfg, index) => {
         const prod = productsWithImages[index];
         return {
             ...cfg,
             src: prod?.image_url ?? DEFAULT_HERO_PHOTOS[index] ?? '',
-            alt: prod?.name ?? 'Koleksi hampers mewah Galuh & Co. dengan pita satin emas',
+            alt:
+                prod?.name ??
+                'Koleksi hampers mewah Galuh & Co. dengan pita satin emas',
         };
     });
 
-    const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    const handleSmoothScroll = (
+        e: React.MouseEvent<HTMLAnchorElement>,
+        targetId: string,
+    ) => {
         e.preventDefault();
-        document.querySelector(targetId)?.scrollIntoView({ behavior: 'smooth' });
+        document
+            .querySelector(targetId)
+            ?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
         <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden bg-[#122E21] px-6 pt-28 pb-16 md:pt-36 md:pb-24">
-
             {/* ── 1. Grain texture — inline SVG data-URI, zero network request ── */}
             <div
                 aria-hidden="true"
@@ -279,7 +310,10 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
             </motion.div>
 
             {/* ── 5. Ambient radial glows ── */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+            >
                 <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C5A059]/12 blur-[130px] sm:h-[650px] sm:w-[650px]" />
                 <div className="absolute top-1/2 -left-20 h-80 w-80 rounded-full bg-[#D4AF37]/10 blur-[100px]" />
                 <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-[#D4AF37]/10 blur-[100px]" />
@@ -289,42 +323,59 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
             {heroImages.map((img) => (
                 <motion.div
                     key={img.id}
-                    initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.55 }}
+                    initial={
+                        shouldReduceMotion
+                            ? undefined
+                            : { opacity: 0, scale: 0.55 }
+                    }
                     animate={
                         shouldReduceMotion
                             ? undefined
                             : {
-                                opacity: 1,
-                                scale: 1,
-                                y: [0, img.floatY, 0],
+                                  opacity: 1,
+                                  scale: 1,
+                                  y: [0, img.floatY, 0],
                               }
                     }
                     transition={
                         shouldReduceMotion
                             ? undefined
                             : {
-                                opacity: { duration: 0.6, delay: img.revealDelay },
-                                scale: { duration: 0.75, delay: img.revealDelay, ease: [0.16, 1, 0.3, 1] },
-                                y: {
-                                    duration: img.floatDuration,
-                                    repeat: Infinity,
-                                    ease: 'easeInOut',
-                                    // float mulai setelah reveal selesai
-                                    delay: img.revealDelay + 0.75,
-                                },
+                                  opacity: {
+                                      duration: 0.6,
+                                      delay: img.revealDelay,
+                                  },
+                                  scale: {
+                                      duration: 0.75,
+                                      delay: img.revealDelay,
+                                      ease: [0.16, 1, 0.3, 1],
+                                  },
+                                  y: {
+                                      duration: img.floatDuration,
+                                      repeat: Infinity,
+                                      ease: 'easeInOut',
+                                      // float mulai setelah reveal selesai
+                                      delay: img.revealDelay + 0.75,
+                                  },
                               }
                     }
                     className={`absolute z-10 hidden md:block ${img.positionClass}`}
                 >
                     <div className="pointer-events-none absolute inset-0 -m-4 rounded-full bg-[#D4AF37]/20 blur-2xl" />
-                    <div className={`relative ${img.sizeClass} overflow-hidden rounded-full border border-[#C5A059]/40 shadow-[0_0_45px_rgba(212,175,55,0.25)] transition-transform duration-500 hover:scale-105`}>
+                    <div
+                        className={`relative ${img.sizeClass} overflow-hidden rounded-full border border-[#C5A059]/40 shadow-[0_0_45px_rgba(212,175,55,0.25)] transition-transform duration-500 hover:scale-105`}
+                    >
                         <img
                             src={img.src}
                             alt={img.alt}
                             className="h-full w-full object-cover"
                             loading="eager"
                             decoding="async"
-                            fetchPriority={img.id === 'top-left' || img.id === 'top-right' ? 'high' : 'auto'}
+                            fetchPriority={
+                                img.id === 'top-left' || img.id === 'top-right'
+                                    ? 'high'
+                                    : 'auto'
+                            }
                         />
                     </div>
                 </motion.div>
@@ -333,22 +384,31 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
             {/* ── 7. Konten tengah — reveal scale + opacity setelah pita ── */}
             <div className="relative z-20 mx-auto w-full max-w-7xl">
                 <motion.div
-                    variants={shouldReduceMotion ? undefined : heroContentVariant}
+                    variants={
+                        shouldReduceMotion ? undefined : heroContentVariant
+                    }
                     initial={shouldReduceMotion ? undefined : 'hidden'}
                     animate={shouldReduceMotion ? undefined : 'visible'}
                 >
                     <motion.div
-                        variants={shouldReduceMotion ? undefined : staggerContainer}
+                        variants={
+                            shouldReduceMotion ? undefined : staggerContainer
+                        }
                         initial={shouldReduceMotion ? undefined : 'hidden'}
                         animate={shouldReduceMotion ? undefined : 'visible'}
                         className="mx-auto flex max-w-2xl flex-col items-center text-center"
                     >
                         {/* Eyebrow pill */}
-                        <motion.div variants={shouldReduceMotion ? undefined : fadeUpChild}>
+                        <motion.div
+                            variants={
+                                shouldReduceMotion ? undefined : fadeUpChild
+                            }
+                        >
                             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#C5A059]/40 bg-[#C5A059]/10 px-4 py-1.5 backdrop-blur-sm">
                                 <span className="size-1.5 animate-pulse rounded-full bg-[#C5A059]" />
                                 <span className="font-sans text-[10px] font-semibold tracking-[0.24em] text-[#C5A059] uppercase sm:text-xs">
-                                    Curated Luxury Hampers &amp; Corporate Gifting
+                                    Curated Luxury Hampers &amp; Corporate
+                                    Gifting
                                 </span>
                             </div>
                         </motion.div>
@@ -356,7 +416,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                         {/* Headline + rotating typewriter */}
                         <motion.h1
                             ref={headlineRef}
-                            variants={shouldReduceMotion ? undefined : fadeUpChild}
+                            variants={
+                                shouldReduceMotion ? undefined : fadeUpChild
+                            }
                             aria-label={`Merangkai Kehangatan dalam Setiap Bingkisan ${ROTATING_WORDS[0]}`}
                             className="font-serif text-3xl leading-[1.2] font-normal tracking-tight text-[#FAF7F2] sm:text-5xl md:text-6xl lg:text-[4rem]"
                         >
@@ -374,13 +436,15 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                 className="mt-1 flex flex-wrap items-baseline justify-center gap-x-[0.3em] italic sm:mt-0"
                                 aria-hidden="true"
                             >
-                                <span className="whitespace-nowrap">dalam Setiap Bingkisan</span>
+                                <span className="whitespace-nowrap">
+                                    dalam Setiap Bingkisan
+                                </span>
 
                                 {/* Container kata rotating — lebar dikunci ghost text */}
                                 <span className="relative inline-block">
                                     {/* Ghost text untuk lock min-width (kata terpanjang) */}
                                     <span
-                                        className="invisible select-none whitespace-nowrap"
+                                        className="invisible whitespace-nowrap select-none"
                                         aria-hidden="true"
                                     >
                                         {longestWord(ROTATING_WORDS)}
@@ -398,7 +462,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                             className={[
                                                 'ml-[2px] inline-block self-stretch w-[1.5px] rounded-full bg-[#C5A059]',
                                                 'animate-cursor-blink',
-                                                !isTyping && !shouldReduceMotion ? 'opacity-0' : '',
+                                                !isTyping && !shouldReduceMotion
+                                                    ? 'opacity-0'
+                                                    : '',
                                             ].join(' ')}
                                         />
                                     </span>
@@ -408,21 +474,29 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
 
                         {/* Subheadline */}
                         <motion.p
-                            variants={shouldReduceMotion ? undefined : fadeUpChild}
+                            variants={
+                                shouldReduceMotion ? undefined : fadeUpChild
+                            }
                             className="mt-6 max-w-xl font-sans text-sm leading-relaxed font-light text-[#FAF7F2]/80 sm:text-base md:text-lg"
                         >
-                            Kurasi hampers eksklusif dengan kemasan penuh estetika dan sentuhan personal
-                            untuk merayakan momen berharga bersama orang terdekat maupun relasi bisnis.
+                            Kurasi hampers eksklusif dengan kemasan penuh
+                            estetika dan sentuhan personal untuk merayakan momen
+                            berharga bersama orang terdekat maupun relasi
+                            bisnis.
                         </motion.p>
 
                         {/* CTA buttons */}
                         <motion.div
-                            variants={shouldReduceMotion ? undefined : fadeUpChild}
+                            variants={
+                                shouldReduceMotion ? undefined : fadeUpChild
+                            }
                             className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:mt-10 sm:w-auto sm:flex-row"
                         >
                             <a
                                 href="#koleksi"
-                                onClick={(e) => handleSmoothScroll(e, '#koleksi')}
+                                onClick={(e) =>
+                                    handleSmoothScroll(e, '#koleksi')
+                                }
                                 className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C5A059] px-8 py-3.5 font-sans text-sm font-medium tracking-wide text-[#122E21] shadow-lg shadow-[#C5A059]/15 transition-all duration-300 hover:scale-[1.02] hover:bg-[#D4AF37] hover:shadow-[#C5A059]/25 active:scale-[0.98] sm:w-auto sm:text-base"
                             >
                                 Lihat Koleksi
@@ -442,18 +516,31 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
 
                         {/* Lingkaran foto — mobile row */}
                         <motion.div
-                            variants={shouldReduceMotion ? undefined : fadeUpChild}
+                            variants={
+                                shouldReduceMotion ? undefined : fadeUpChild
+                            }
                             className="mt-12 flex items-center justify-center gap-3 sm:gap-4 md:hidden"
                         >
                             {heroImages.map((img, idx) => (
                                 <motion.div
                                     key={img.id}
-                                    initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.8 }}
-                                    animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1 }}
+                                    initial={
+                                        shouldReduceMotion
+                                            ? undefined
+                                            : { opacity: 0, scale: 0.8 }
+                                    }
+                                    animate={
+                                        shouldReduceMotion
+                                            ? undefined
+                                            : { opacity: 1, scale: 1 }
+                                    }
                                     transition={
                                         shouldReduceMotion
                                             ? undefined
-                                            : { duration: 0.5, delay: 0.35 + idx * 0.08 }
+                                            : {
+                                                  duration: 0.5,
+                                                  delay: 0.35 + idx * 0.08,
+                                              }
                                     }
                                 >
                                     <div className="size-16 overflow-hidden rounded-full border border-[#C5A059]/40 shadow-[0_0_25px_rgba(212,175,55,0.22)] sm:size-20">

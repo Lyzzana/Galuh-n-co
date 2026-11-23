@@ -46,12 +46,12 @@ export default function Navbar() {
             {/* ── Main Floating Pill Glass Container ────────────────────────────── */}
             <nav
                 aria-label="Navigasi Utama"
-                className={`pointer-events-auto mx-auto flex h-[64px] max-w-5xl items-center justify-between rounded-full px-5 transition-all duration-300 sm:px-7 ${isScrolled
-                    ? 'border border-[#C5A059]/40 bg-[#FAF7F2]/85 shadow-[0_8px_30px_rgba(44,30,22,0.08)] backdrop-blur-xl'
-                    : 'border border-[#C5A059]/35 bg-[#122E21]/65 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl'
-                    }`}
+                className={`pointer-events-auto mx-auto flex h-[64px] max-w-5xl items-center justify-between rounded-full px-5 transition-all duration-300 sm:px-7 ${
+                    isScrolled
+                        ? 'border border-[#C5A059]/40 bg-[#FAF7F2]/85 shadow-[0_8px_30px_rgba(44,30,22,0.08)] backdrop-blur-xl'
+                        : 'border border-[#C5A059]/35 bg-[#122E21]/65 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl'
+                }`}
             >
-
                 {/* 1. Kiri: Logo GALUH & CO. (Posisi & skala terkunci di tengah kotak) */}
                 <a
                     href="#"
@@ -65,8 +65,9 @@ export default function Navbar() {
                         loading="eager"
                         decoding="async"
                         fetchPriority="high"
-                        className={`pointer-events-none absolute inset-0 m-auto max-h-10 max-w-full object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-opacity duration-300 sm:max-h-11 ${isScrolled ? 'opacity-0' : 'opacity-100'
-                            }`}
+                        className={`pointer-events-none absolute inset-0 m-auto max-h-10 max-w-full object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-opacity duration-300 sm:max-h-11 ${
+                            isScrolled ? 'opacity-0' : 'opacity-100'
+                        }`}
                     />
                     {/* Logo Hitam (muncul lembut saat kapsul terang) */}
                     <img
@@ -75,8 +76,9 @@ export default function Navbar() {
                         aria-hidden="true"
                         loading="eager"
                         decoding="async"
-                        className={`pointer-events-none absolute inset-0 m-auto max-h-11 max-w-full object-contain transition-opacity duration-300 sm:max-h-12 ${isScrolled ? 'opacity-100' : 'opacity-0'
-                            }`}
+                        className={`pointer-events-none absolute inset-0 m-auto max-h-11 max-w-full object-contain transition-opacity duration-300 sm:max-h-12 ${
+                            isScrolled ? 'opacity-100' : 'opacity-0'
+                        }`}
                     />
                 </a>
 
@@ -87,10 +89,11 @@ export default function Navbar() {
                             key={link.href}
                             href={link.href}
                             onClick={(e) => handleNavClick(e, link.href)}
-                            className={`group relative py-1 font-sans text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${isScrolled
-                                ? 'text-[#2C1E16] hover:text-[#C5A059]'
-                                : 'text-[#FAF7F2]/90 hover:text-[#C5A059]'
-                                }`}
+                            className={`group relative py-1 font-sans text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${
+                                isScrolled
+                                    ? 'text-[#2C1E16] hover:text-[#C5A059]'
+                                    : 'text-[#FAF7F2]/90 hover:text-[#C5A059]'
+                            }`}
                         >
                             <span>{link.label}</span>
                             {/* Indikator garis tipis emas saat hover */}
@@ -104,10 +107,11 @@ export default function Navbar() {
                     <a
                         href="#koleksi"
                         onClick={(e) => handleNavClick(e, '#koleksi')}
-                        className={`hidden rounded-full px-5 py-2 font-sans text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] md:inline-flex ${isScrolled
-                            ? 'bg-[#163828] text-[#FAF7F2] hover:bg-[#122E21]'
-                            : 'bg-[#C5A059] text-[#122E21] hover:bg-[#D4AF37]'
-                            }`}
+                        className={`hidden rounded-full px-5 py-2 font-sans text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] md:inline-flex ${
+                            isScrolled
+                                ? 'bg-[#163828] text-[#FAF7F2] hover:bg-[#122E21]'
+                                : 'bg-[#C5A059] text-[#122E21] hover:bg-[#D4AF37]'
+                        }`}
                     >
                         Pesan Sekarang
                     </a>
@@ -117,10 +121,11 @@ export default function Navbar() {
                         type="button"
                         aria-label="Buka menu navigasi"
                         onClick={() => setMobileOpen((prev) => !prev)}
-                        className={`flex size-9 items-center justify-center rounded-full transition-colors md:hidden ${isScrolled
-                            ? 'text-[#163828] hover:bg-[#163828]/10'
-                            : 'text-[#FAF7F2] hover:bg-white/15'
-                            }`}
+                        className={`flex size-9 items-center justify-center rounded-full transition-colors md:hidden ${
+                            isScrolled
+                                ? 'text-[#163828] hover:bg-[#163828]/10'
+                                : 'text-[#FAF7F2] hover:bg-white/15'
+                        }`}
                     >
                         {mobileOpen ? (
                             <XIcon className="size-5" />

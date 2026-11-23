@@ -23,7 +23,11 @@ const FADE_UP_VARIANTS: Variants = {
     },
 };
 
-export default function CorporateSection({ partners = [] }: { partners?: PartnerItem[] }) {
+export default function CorporateSection({
+    partners = [],
+}: {
+    partners?: PartnerItem[];
+}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         company: '',
@@ -442,12 +446,17 @@ export default function CorporateSection({ partners = [] }: { partners?: Partner
                     >
                         {/* Duplikasi 2× agar looping mulus */}
                         <div
-                            className="animate-marquee group-hover:[animation-play-state:paused] flex w-max items-center gap-10"
+                            className="animate-marquee flex w-max items-center gap-10 group-hover:[animation-play-state:paused]"
                             aria-hidden="true"
                         >
-                            {[...partners, ...partners].map((partner, index) => (
-                                <PartnerCard key={`${partner.id}-${index}`} partner={partner} />
-                            ))}
+                            {[...partners, ...partners].map(
+                                (partner, index) => (
+                                    <PartnerCard
+                                        key={`${partner.id}-${index}`}
+                                        partner={partner}
+                                    />
+                                ),
+                            )}
                         </div>
                     </div>
                 </div>
@@ -460,9 +469,7 @@ function PartnerCard({ partner }: { partner: PartnerItem }) {
     return (
         <div className="flex shrink-0 flex-col items-center gap-2.5">
             {/* Logo container */}
-            <div
-                className="flex h-14 w-28 items-center justify-center rounded-xl border border-[#C5A059]/20 bg-white/70 px-3 py-2 shadow-sm backdrop-blur-sm"
-            >
+            <div className="flex h-14 w-28 items-center justify-center rounded-xl border border-[#C5A059]/20 bg-white/70 px-3 py-2 shadow-sm backdrop-blur-sm">
                 {partner.logo_url ? (
                     <img
                         src={partner.logo_url}
