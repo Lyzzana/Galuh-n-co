@@ -92,9 +92,15 @@ export default function FooterSection() {
                 <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-3 md:gap-10">
                     {/* Kolom 1: Brand & Medsos */}
                     <div className="space-y-4">
-                        <span className="font-serif text-2xl font-bold tracking-[0.2em] text-[#FAF7F2]">
-                            GALUH &amp; CO.
-                        </span>
+                        <div className="flex items-center">
+                            <img
+                                src="/asset/logo/Logo_galu&co.png"
+                                alt="Galuh & Co."
+                                loading="lazy"
+                                decoding="async"
+                                className="h-10 w-auto object-contain sm:h-12"
+                            />
+                        </div>
                         <p className="font-sans text-xs leading-relaxed font-light text-[#FAF7F2]/75 sm:text-sm">
                             House of Curated Luxury Hampers &amp; Corporate
                             Gifting. Merangkai estetika, kehangatan rasa, dan

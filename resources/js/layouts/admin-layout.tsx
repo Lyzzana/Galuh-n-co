@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import {
     BarChart3Icon,
     BellIcon,
+    BuildingIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
     LayoutGridIcon,
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import * as AdminInquiryController from '@/actions/App/Http/Controllers/Admin/InquiryController';
+import * as AdminPartnerController from '@/actions/App/Http/Controllers/Admin/PartnerController';
 import * as AdminProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
@@ -27,16 +29,9 @@ type Props = {
 
 const navItems = [
     { href: dashboard().url, icon: LayoutGridIcon, label: 'Dashboard' },
-    {
-        href: AdminProductController.index().url,
-        icon: PackageIcon,
-        label: 'Produk',
-    },
-    {
-        href: AdminInquiryController.index().url,
-        icon: MessageSquareTextIcon,
-        label: 'Inquiry',
-    },
+    { href: AdminProductController.index().url, icon: PackageIcon, label: 'Produk' },
+    { href: AdminInquiryController.index().url, icon: MessageSquareTextIcon, label: 'Inquiry' },
+    { href: AdminPartnerController.index().url, icon: BuildingIcon, label: 'Partner' },
     { href: '/settings/profile', icon: SettingsIcon, label: 'Pengaturan' },
 ];
 

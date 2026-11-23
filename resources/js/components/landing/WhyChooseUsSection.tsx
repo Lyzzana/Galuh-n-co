@@ -1,6 +1,7 @@
 import type { Variants } from 'motion/react';
 import { motion } from 'motion/react';
 import { AwardIcon, BoxIcon, PaletteIcon, ShieldCheckIcon } from 'lucide-react';
+import SectionDivider from '@/components/landing/SectionDivider';
 
 const FADE_UP_VARIANTS: Variants = {
     hidden: { opacity: 0, y: 24 },
@@ -50,7 +51,8 @@ const HIGHLIGHTS = [
 
 export default function WhyChooseUsSection() {
     return (
-        <section className="border-t border-[#E5DEC9]/60 bg-[#FAF7F2] py-20 md:py-28">
+        <section className="bg-[#FAF7F2] py-20 md:py-28">
+            <SectionDivider />
             <div className="mx-auto max-w-7xl px-6">
                 <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
                     {/* Kolom Kiri: Narasi & 4 Keunggulan */}
@@ -131,10 +133,11 @@ export default function WhyChooseUsSection() {
 
                         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-[#C5A059]/35 bg-white shadow-xl sm:aspect-[4/3]">
                             <img
-                                src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=900&auto=format&fit=crop"
+                                src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=75&auto=format&fit=crop"
                                 alt="Detail kemasan mewah hampers Galuh & Co."
                                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                                 loading="lazy"
+                                decoding="async"
                             />
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#122E21]/50 via-transparent to-transparent" />
                         </div>

@@ -1,75 +1,97 @@
 import { Head } from '@inertiajs/react';
+import { lazy, Suspense } from 'react';
 import { MotionConfig } from 'motion/react';
-import AboutSection from '@/components/landing/AboutSection';
-import CatalogSection from '@/components/landing/CatalogSection';
-import CorporateSection from '@/components/landing/CorporateSection';
-import FaqSection from '@/components/landing/FaqSection';
-import FloatingWhatsApp from '@/components/landing/FloatingWhatsApp';
-import FooterSection from '@/components/landing/FooterSection';
-import HeroSection from '@/components/landing/HeroSection';
-import HowToOrderSection from '@/components/landing/HowToOrderSection';
-import Navbar from '@/components/landing/Navbar';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
-import WhyChooseUsSection from '@/components/landing/WhyChooseUsSection';
 import type { Product } from '@/types/product';
 
+// ── Above-the-fold — eager import (LCP critical path) ────────────────────────
+import Navbar from '@/components/landing/Navbar';
+import HeroSection from '@/components/landing/HeroSection';
+import AboutSection from '@/components/landing/AboutSection';
+import FloatingWhatsApp from '@/components/landing/FloatingWhatsApp';
+
+// ── Below-the-fold — lazy import (code-split, downloaded after FCP) ───────────
+const CatalogSection = lazy(() => import('@/components/landing/CatalogSection'));
+const WhyChooseUsSection = lazy(() => import('@/components/landing/WhyChooseUsSection'));
+const HowToOrderSection = lazy(() => import('@/components/landing/HowToOrderSection'));
+const CorporateSection = lazy(() => import('@/components/landing/CorporateSection'));
+const TestimonialsSection = lazy(() => import('@/components/landing/TestimonialsSection'));
+const FaqSection = lazy(() => import('@/components/landing/FaqSection'));
+const FooterSection = lazy(() => import('@/components/landing/FooterSection'));
+
 export type { Product };
+
+export interface PartnerItem {
+    id: number;
+    name: string;
+    sector: string | null;
+    logo_url: string | null;
+}
 
 export interface WelcomeProps {
     products?: Product[];
     categories?: string[];
+    partners?: PartnerItem[];
+}
+
+// Skeleton placeholder ringan — ditampilkan saat chunk lazy sedang diunduh.
+// Tinggi min-h sesuai section agar tidak ada layout jump.
+function SectionSkeleton({ minHeight = 'min-h-[480px]' }: { minHeight?: string }) {
+    return <div className={`${minHeight} bg-[#FAF7F2]`} aria-hidden="true" />;
 }
 
 export default function Welcome({
     products = [],
     categories = [],
+    partners = [],
 }: WelcomeProps) {
     return (
         <MotionConfig reducedMotion="user">
             <Head>
-                <title>
-                    Galuh &amp; Co. — Curated Luxury Hampers &amp; Corporate
-                    Gifting
-                </title>
+                <title>Galuh &amp; Co. — Curated Luxury Hampers &amp; Corporate Gifting</title>
                 <meta
                     name="description"
-                    content="Kurasi hampers mewah dan bingkisan eksklusif dengan kemasan penuh estetika dan sentuhan personal untuk merayakan setiap momen istimewa."
+                    content="Kurasi hampers eksklusif dengan kemasan penuh estetika dan sentuhan personal untuk merayakan setiap momen istimewa."
                 />
             </Head>
 
-            {/* Root Container dengan Tema Warm Luxury yang Terkunci (Tanpa Inversi Dark Mode) */}
-            <div className="min-h-screen bg-[#FAF7F2] font-sans text-[#2C1E16] antialiased selection:bg-[#C5A059]/25 selection:text-[#122E21]">
-                {/* Section 1: Sticky Navbar */}
+            <div className="no-scrollbar min-h-screen bg-[#FAF7F2] font-sans text-[#2C1E16] antialiased selection:bg-[#C5A059]/25 selection:text-[#122E21]">
+
+                {/* ── Above-the-fold (eager) ── */}
                 <Navbar />
-
-                {/* Section 2: Hero Section */}
                 <HeroSection products={products} />
-
-                {/* Section 3: Tentang Brand */}
                 <AboutSection products={products} />
 
-                {/* Section 4: Koleksi Hampers & Modal Detail Produk */}
-                <CatalogSection products={products} categories={categories} />
+                {/* ── Below-the-fold (lazy + Suspense) ── */}
 
-                {/* Section 5: Mengapa Memilih Galuh & Co. */}
-                <WhyChooseUsSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[600px]" />}>
+                    <CatalogSection products={products} categories={categories} />
+                </Suspense>
 
-                {/* Section 6: Cara Pemesanan */}
-                <HowToOrderSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[480px]" />}>
+                    <WhyChooseUsSection />
+                </Suspense>
 
-                {/* Section 7: Layanan & Form Inquiry Corporate */}
-                <CorporateSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[400px]" />}>
+                    <HowToOrderSection />
+                </Suspense>
 
-                {/* Section 8: Testimoni Kartu Ucapan Gantung */}
-                <TestimonialsSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[600px]" />}>
+                    <CorporateSection partners={partners} />
+                </Suspense>
 
-                {/* Section 9: Pertanyaan Umum (FAQ Accordion) */}
-                <FaqSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[480px]" />}>
+                    <TestimonialsSection />
+                </Suspense>
 
-                {/* Section 10: CTA Penutup & Footer */}
-                <FooterSection />
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[400px]" />}>
+                    <FaqSection />
+                </Suspense>
 
-                {/* Floating WhatsApp Quick Contact Button */}
+                <Suspense fallback={<SectionSkeleton minHeight="min-h-[320px]" />}>
+                    <FooterSection />
+                </Suspense>
+
+                {/* FloatingWhatsApp — kecil, selalu eager */}
                 <FloatingWhatsApp />
             </div>
         </MotionConfig>

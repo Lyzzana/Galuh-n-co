@@ -6,13 +6,14 @@ import {
     HeartHandshakeIcon,
 } from 'lucide-react';
 import type { Product } from '@/types/product';
+import SectionDivider from '@/components/landing/SectionDivider';
 
 interface AboutSectionProps {
     products?: Product[];
 }
 
 const DEFAULT_EDITORIAL_PHOTO =
-    'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=900&auto=format&fit=crop';
+    'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=75&auto=format&fit=crop';
 
 const FADE_UP_VARIANTS: Variants = {
     hidden: { opacity: 0, y: 24 },
@@ -71,6 +72,7 @@ export default function AboutSection({ products = [] }: AboutSectionProps) {
             id="tentang"
             className="scroll-mt-20 bg-[#FAF7F2] py-20 md:py-28"
         >
+            <SectionDivider />
             <div className="mx-auto max-w-7xl px-6">
                 <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
                     {/* Kolom Kiri: Visual Editorial dengan Frame Mewah & Floating Badge */}
@@ -97,6 +99,7 @@ export default function AboutSection({ products = [] }: AboutSectionProps) {
                                 alt={editorialAlt}
                                 className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                                 loading="lazy"
+                                decoding="async"
                             />
                             {/* Gradient Overlay Lembut di Bagian Bawah */}
                             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#122E21]/40 via-transparent to-transparent" />

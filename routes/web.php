@@ -2,6 +2,8 @@
 
 // Import controller untuk mengelola daftar inquiry di halaman admin (diberi alias agar tidak bentrok)
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
+// Import controller untuk mengelola CRUD partner korporat di halaman admin
+use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 // Import controller untuk mengelola CRUD produk hampers di halaman admin
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 // Import controller untuk menampilkan katalog produk aktif di halaman depan (publik)
@@ -37,6 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Mendaftarkan route manajemen inquiry (/admin/inquiries) hanya untuk melihat daftar (index), ubah status (update), dan hapus (destroy)
         Route::resource('inquiries', AdminInquiryController::class)->only(['index', 'update', 'destroy']);
+
+        // Mendaftarkan route CRUD partner korporat (/admin/partners) kecuali create, show, dan edit (memakai modal di halaman index)
+        Route::resource('partners', AdminPartnerController::class)->except(['create', 'show', 'edit']);
     });
 });
 

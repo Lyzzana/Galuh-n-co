@@ -79,10 +79,10 @@ export default function CatalogSection({
         activeCategory === 'Semua'
             ? items
             : items.filter(
-                  (p) =>
-                      p.category?.toLowerCase() ===
-                      activeCategory.toLowerCase(),
-              );
+                (p) =>
+                    p.category?.toLowerCase() ===
+                    activeCategory.toLowerCase(),
+            );
 
     const displayedProducts = filteredProducts.slice(0, 8);
 
@@ -119,11 +119,10 @@ export default function CatalogSection({
                                         onClick={() =>
                                             setActiveCategory(category)
                                         }
-                                        className={`rounded-full px-5 py-2 font-sans text-xs font-medium tracking-wide transition-all duration-300 ${
-                                            isActive
-                                                ? 'bg-[#163828] text-[#FAF7F2] shadow-sm'
-                                                : 'border border-[#E5DEC9] bg-white/80 text-[#6B5E55] hover:border-[#C5A059] hover:text-[#163828]'
-                                        }`}
+                                        className={`rounded-full px-5 py-2 font-sans text-xs font-medium tracking-wide transition-all duration-300 ${isActive
+                                            ? 'bg-[#163828] text-[#FAF7F2] shadow-sm'
+                                            : 'border border-[#E5DEC9] bg-white/80 text-[#6B5E55] hover:border-[#C5A059] hover:text-[#163828]'
+                                            }`}
                                     >
                                         {category}
                                     </button>
@@ -197,10 +196,11 @@ export default function CatalogSection({
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{
-                                            duration: 0.4,
+                                            duration: 0.42,
                                             ease: [0.16, 1, 0.3, 1] as const,
                                         }}
-                                        className="group flex flex-col justify-between overflow-hidden rounded-xl border border-[#C5A059]/25 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#C5A059]/60 hover:shadow-lg"
+                                        viewport={{ once: true }}
+                                        className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[#C5A059]/25 bg-white shadow-[0_2px_12px_rgba(44,30,22,0.07)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C5A059]/55 hover:shadow-[0_12px_40px_rgba(44,30,22,0.14),inset_0_0_0_1px_rgba(197,160,89,0.18)]"
                                     >
                                         {/* Foto Produk atau Placeholder Elegan */}
                                         <div className="relative aspect-square w-full overflow-hidden bg-[#FAF7F2]">
@@ -210,6 +210,7 @@ export default function CatalogSection({
                                                     alt={product.name}
                                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                     loading="lazy"
+                                                    decoding="async"
                                                 />
                                             ) : (
                                                 <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
@@ -221,6 +222,11 @@ export default function CatalogSection({
                                                     </span>
                                                 </div>
                                             )}
+                                            {/* Inner hairline ring — kesan bingkai kemasan */}
+                                            <div
+                                                aria-hidden="true"
+                                                className="pointer-events-none absolute inset-[6px] rounded-[6px] ring-1 ring-inset ring-[#C5A059]/20 transition-all duration-300 group-hover:ring-[#C5A059]/38"
+                                            />
                                             <span className="absolute top-3 left-3 rounded-full border border-[#C5A059]/35 bg-[#FAF7F2]/90 px-2.5 py-0.5 font-sans text-[10px] font-semibold tracking-wider text-[#163828] uppercase backdrop-blur-xs">
                                                 {product.category}
                                             </span>
@@ -343,6 +349,8 @@ export default function CatalogSection({
                                             src={selectedProduct.image_url}
                                             alt={selectedProduct.name}
                                             className="h-full w-full object-cover"
+                                            loading="lazy"
+                                            decoding="async"
                                         />
                                     ) : (
                                         <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -358,7 +366,7 @@ export default function CatalogSection({
                                 </div>
 
                                 {/* Sisi Kanan: Detail & Daftar Isi Hampers */}
-                                <div className="flex max-h-[75vh] flex-col justify-between overflow-y-auto p-6 md:max-h-[580px] md:p-8">
+                                <div className="no-scrollbar flex max-h-[75vh] flex-col justify-between overflow-y-auto p-6 md:max-h-[580px] md:p-8">
                                     <div>
                                         <span className="inline-block rounded-full border border-[#C5A059]/40 bg-[#C5A059]/10 px-3 py-1 font-sans text-[10px] font-semibold tracking-wider text-[#C5A059] uppercase">
                                             {selectedProduct.category}
@@ -385,8 +393,8 @@ export default function CatalogSection({
                                             </h4>
                                             <ul className="mt-3 space-y-2">
                                                 {selectedProduct.contents &&
-                                                selectedProduct.contents
-                                                    .length > 0 ? (
+                                                    selectedProduct.contents
+                                                        .length > 0 ? (
                                                     selectedProduct.contents.map(
                                                         (item, idx) => (
                                                             <li

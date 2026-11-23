@@ -118,9 +118,14 @@ export default function KatalogPage({
 
                         <Link
                             href="/"
-                            className="font-serif text-lg font-bold tracking-[0.2em] text-[#163828] sm:text-xl"
+                            aria-label="Galuh & Co. Beranda"
+                            className="flex items-center transition-opacity hover:opacity-90"
                         >
-                            GALUH &amp; CO.
+                            <img
+                                src="/asset/logo/Logo_galu&co.png"
+                                alt="Galuh & Co."
+                                className="h-8 w-auto object-contain sm:h-9"
+                            />
                         </Link>
 
                         <a

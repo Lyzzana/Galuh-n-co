@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Partner;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -71,7 +72,26 @@ class CatalogController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('welcome', $this->getCatalogData());
+        $data = $this->getCatalogData();
+
+        /** @var array<int, array{id: int, name: string, sector: string|null, logo_url: string|null}> $partners */
+        $partners = Partner::query()
+            ->active()
+            ->get()
+            ->map(fn (Partner $partner) => [
+                'id' => $partner->id,
+                'name' => $partner->name,
+                'sector' => $partner->sector,
+                'logo_url' => $partner->logo
+                    ? asset('storage/'.ltrim($partner->logo, '/'))
+                    : null,
+            ])
+            ->values()
+            ->all();
+
+        return Inertia::render('welcome', array_merge($data, [
+            'partners' => $partners,
+        ]));
     }
 
     public function catalog(): Response

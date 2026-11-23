@@ -13,28 +13,6 @@ const NAV_LINKS = [
 const WA_URL =
     'https://wa.me/6281779839434?text=Halo%20Galuh%20%26%20Co.%2C%20saya%20tertarik%20untuk%20konsultasi%20pemesanan%20hampers.';
 
-const LOGO_TEXT = 'GALUH & CO.';
-
-const logoContainerVariants = {
-    hidden: { opacity: 1 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.07,
-            delayChildren: 0.2,
-        },
-    },
-};
-
-const letterVariants = {
-    hidden: { opacity: 0, y: 3 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.2 },
-    },
-};
-
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -68,43 +46,37 @@ export default function Navbar() {
             {/* ── Main Floating Pill Glass Container ────────────────────────────── */}
             <nav
                 aria-label="Navigasi Utama"
-                className={`pointer-events-auto mx-auto flex h-[64px] max-w-5xl items-center justify-between rounded-full px-5 transition-all duration-300 sm:px-7 ${
-                    isScrolled
-                        ? 'border border-[#C5A059]/40 bg-[#FAF7F2]/85 shadow-[0_8px_30px_rgba(44,30,22,0.08)] backdrop-blur-xl'
-                        : 'border border-[#C5A059]/35 bg-[#122E21]/65 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl'
-                }`}
+                className={`pointer-events-auto mx-auto flex h-[64px] max-w-5xl items-center justify-between rounded-full px-5 transition-all duration-300 sm:px-7 ${isScrolled
+                    ? 'border border-[#C5A059]/40 bg-[#FAF7F2]/85 shadow-[0_8px_30px_rgba(44,30,22,0.08)] backdrop-blur-xl'
+                    : 'border border-[#C5A059]/35 bg-[#122E21]/65 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl'
+                    }`}
             >
-                {/* 1. Kiri: Logo Serif dengan Animasi Typewriter & Kursor Emas */}
+
+                {/* 1. Kiri: Logo GALUH & CO. (Posisi & skala terkunci di tengah kotak) */}
                 <a
                     href="#"
-                    className={`flex items-center font-serif text-base font-semibold tracking-[0.2em] transition-colors sm:text-lg ${
-                        isScrolled ? 'text-[#163828]' : 'text-[#FAF7F2]'
-                    }`}
+                    aria-label="Galuh & Co. Beranda"
+                    className="relative flex h-11 w-20 shrink-0 items-center justify-center sm:h-12 sm:w-24"
                 >
-                    <motion.span
-                        variants={logoContainerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="inline-flex"
-                    >
-                        {LOGO_TEXT.split('').map((char, index) => (
-                            <motion.span
-                                key={index}
-                                variants={letterVariants}
-                                className={char === ' ' ? 'w-1.5' : ''}
-                            >
-                                {char}
-                            </motion.span>
-                        ))}
-                    </motion.span>
-                    <motion.span
-                        animate={{ opacity: [0, 1, 0] }}
-                        transition={{
-                            duration: 0.8,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                        }}
-                        className="ml-1 inline-block h-3.5 w-[2px] bg-[#C5A059] align-middle"
+                    {/* Logo Gold (tampil saat di atas Hero gelap) */}
+                    <img
+                        src="/asset/logo/Logo_galu&co.png"
+                        alt="Galuh & Co."
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                        className={`pointer-events-none absolute inset-0 m-auto max-h-10 max-w-full object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-opacity duration-300 sm:max-h-11 ${isScrolled ? 'opacity-0' : 'opacity-100'
+                            }`}
+                    />
+                    {/* Logo Hitam (muncul lembut saat kapsul terang) */}
+                    <img
+                        src="/asset/logo/gnc-hitam.png"
+                        alt=""
+                        aria-hidden="true"
+                        loading="eager"
+                        decoding="async"
+                        className={`pointer-events-none absolute inset-0 m-auto max-h-11 max-w-full object-contain transition-opacity duration-300 sm:max-h-12 ${isScrolled ? 'opacity-100' : 'opacity-0'
+                            }`}
                     />
                 </a>
 
@@ -115,11 +87,10 @@ export default function Navbar() {
                             key={link.href}
                             href={link.href}
                             onClick={(e) => handleNavClick(e, link.href)}
-                            className={`group relative py-1 font-sans text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${
-                                isScrolled
-                                    ? 'text-[#2C1E16] hover:text-[#C5A059]'
-                                    : 'text-[#FAF7F2]/90 hover:text-[#C5A059]'
-                            }`}
+                            className={`group relative py-1 font-sans text-xs font-medium tracking-wider uppercase transition-colors duration-200 ${isScrolled
+                                ? 'text-[#2C1E16] hover:text-[#C5A059]'
+                                : 'text-[#FAF7F2]/90 hover:text-[#C5A059]'
+                                }`}
                         >
                             <span>{link.label}</span>
                             {/* Indikator garis tipis emas saat hover */}
@@ -133,11 +104,10 @@ export default function Navbar() {
                     <a
                         href="#koleksi"
                         onClick={(e) => handleNavClick(e, '#koleksi')}
-                        className={`hidden rounded-full px-5 py-2 font-sans text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] md:inline-flex ${
-                            isScrolled
-                                ? 'bg-[#163828] text-[#FAF7F2] hover:bg-[#122E21]'
-                                : 'bg-[#C5A059] text-[#122E21] hover:bg-[#D4AF37]'
-                        }`}
+                        className={`hidden rounded-full px-5 py-2 font-sans text-xs font-semibold tracking-wide transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] md:inline-flex ${isScrolled
+                            ? 'bg-[#163828] text-[#FAF7F2] hover:bg-[#122E21]'
+                            : 'bg-[#C5A059] text-[#122E21] hover:bg-[#D4AF37]'
+                            }`}
                     >
                         Pesan Sekarang
                     </a>
@@ -147,11 +117,10 @@ export default function Navbar() {
                         type="button"
                         aria-label="Buka menu navigasi"
                         onClick={() => setMobileOpen((prev) => !prev)}
-                        className={`flex size-9 items-center justify-center rounded-full transition-colors md:hidden ${
-                            isScrolled
-                                ? 'text-[#163828] hover:bg-[#163828]/10'
-                                : 'text-[#FAF7F2] hover:bg-white/15'
-                        }`}
+                        className={`flex size-9 items-center justify-center rounded-full transition-colors md:hidden ${isScrolled
+                            ? 'text-[#163828] hover:bg-[#163828]/10'
+                            : 'text-[#FAF7F2] hover:bg-white/15'
+                            }`}
                     >
                         {mobileOpen ? (
                             <XIcon className="size-5" />
@@ -173,9 +142,18 @@ export default function Navbar() {
                         className="pointer-events-auto mx-auto mt-2 max-w-5xl rounded-3xl border border-[#C5A059]/30 bg-[#FAF7F2]/95 p-6 shadow-2xl backdrop-blur-xl md:hidden"
                     >
                         <div className="flex flex-col space-y-4">
-                            <span className="font-sans text-[10px] font-semibold tracking-[0.25em] text-[#C5A059] uppercase">
-                                Menu Navigasi
-                            </span>
+                            <div className="flex items-center justify-between border-b border-[#E5DEC9]/60 pb-3">
+                                <img
+                                    src="/asset/logo/Logo_galu&co.png"
+                                    alt="Galuh & Co."
+                                    loading="lazy"
+                                    decoding="async"
+                                    className="h-7 w-auto object-contain"
+                                />
+                                <span className="font-sans text-[10px] font-semibold tracking-[0.25em] text-[#C5A059] uppercase">
+                                    Menu Navigasi
+                                </span>
+                            </div>
 
                             <div className="flex flex-col divide-y divide-[#E5DEC9]/60">
                                 {NAV_LINKS.map((link) => (

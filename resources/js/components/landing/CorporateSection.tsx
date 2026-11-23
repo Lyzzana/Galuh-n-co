@@ -9,6 +9,7 @@ import {
     SparklesIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import type { PartnerItem } from '@/pages/welcome';
 
 const FADE_UP_VARIANTS: Variants = {
     hidden: { opacity: 0, y: 24 },
@@ -22,7 +23,7 @@ const FADE_UP_VARIANTS: Variants = {
     },
 };
 
-export default function CorporateSection() {
+export default function CorporateSection({ partners = [] }: { partners?: PartnerItem[] }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         company: '',
@@ -420,6 +421,69 @@ export default function CorporateSection() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* ── Partner Marquee ─────────────────────────────────── */}
+            {partners.length > 0 && (
+                <div className="mt-16 md:mt-20">
+                    {/* Divider dengan aksen champagne */}
+                    <div className="mx-auto mb-8 flex max-w-7xl items-center gap-4 px-6">
+                        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#C5A059]/40 to-[#C5A059]/20" />
+                        <span className="shrink-0 font-sans text-xs font-semibold tracking-[0.22em] text-[#C5A059] uppercase">
+                            Dipercaya Oleh
+                        </span>
+                        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#C5A059]/40 to-[#C5A059]/20" />
+                    </div>
+
+                    {/* Marquee track */}
+                    <div
+                        className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+                        aria-label="Daftar partner korporat"
+                        role="region"
+                    >
+                        {/* Duplikasi 2× agar looping mulus */}
+                        <div
+                            className="animate-marquee group-hover:[animation-play-state:paused] flex w-max items-center gap-10"
+                            aria-hidden="true"
+                        >
+                            {[...partners, ...partners].map((partner, index) => (
+                                <PartnerCard key={`${partner.id}-${index}`} partner={partner} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
+    );
+}
+
+function PartnerCard({ partner }: { partner: PartnerItem }) {
+    return (
+        <div className="flex shrink-0 flex-col items-center gap-2.5">
+            {/* Logo container */}
+            <div
+                className="flex h-14 w-28 items-center justify-center rounded-xl border border-[#C5A059]/20 bg-white/70 px-3 py-2 shadow-sm backdrop-blur-sm"
+            >
+                {partner.logo_url ? (
+                    <img
+                        src={partner.logo_url}
+                        alt={partner.name}
+                        className="h-full w-full object-contain"
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                    />
+                ) : (
+                    /* Placeholder monogram jika logo belum diupload */
+                    <span className="font-serif text-lg font-semibold text-[#C5A059]/70">
+                        {partner.name.charAt(0).toUpperCase()}
+                    </span>
+                )}
+            </div>
+
+            {/* Nama perusahaan */}
+            <span className="max-w-28 truncate font-sans text-xs font-medium text-[#6B5E55]">
+                {partner.name}
+            </span>
+        </div>
     );
 }
