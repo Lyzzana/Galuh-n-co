@@ -2,10 +2,12 @@ import type { Variants } from 'motion/react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { useRef, useState, useEffect } from 'react';
 import { ArrowRightIcon, MessageCircleIcon } from 'lucide-react';
+import { getCmsText, type SectionContent } from '@/components/landing/cms';
 import type { Product } from '@/types/product';
 
 interface HeroSectionProps {
     products?: Product[];
+    content?: SectionContent;
 }
 
 const DEFAULT_HERO_PHOTOS = [
@@ -204,14 +206,29 @@ const fadeUpChild: Variants = {
     },
 };
 
-export default function HeroSection({ products = [] }: HeroSectionProps) {
+export default function HeroSection({
+    products = [],
+    content,
+}: HeroSectionProps) {
     // Motion/react hook — otomatis false di SSR, true di browser jika reduced motion aktif
     const shouldReduceMotion = useReducedMotion() ?? false;
+
+    const rawWords = getCmsText(
+        content,
+        'rotating_words',
+        ROTATING_WORDS.join(','),
+    );
+    const rotatingWords = rawWords
+        .split(',')
+        .map((w) => w.trim())
+        .filter(Boolean);
+    const activeWords =
+        rotatingWords.length > 0 ? rotatingWords : ROTATING_WORDS;
 
     const headlineRef = useRef<HTMLHeadingElement>(null);
     const inView = useInView(headlineRef, { once: true, margin: '-80px' });
 
-    const { displayText, isTyping } = useRotatingTypewriter(ROTATING_WORDS, {
+    const { displayText, isTyping } = useRotatingTypewriter(activeWords, {
         typeSpeed: 85,
         eraseSpeed: 50,
         pauseAfterType: 2400,
@@ -219,6 +236,37 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
         active: inView,
         reducedMotion: shouldReduceMotion,
     });
+
+    const eyebrowText = getCmsText(
+        content,
+        'eyebrow',
+        'Curated Luxury Hampers & Corporate Gifting',
+    );
+    const headlineLine1 = getCmsText(
+        content,
+        'headline_line_1',
+        'Merangkai Kehangatan',
+    );
+    const headlineLine2 = getCmsText(
+        content,
+        'headline_line_2',
+        'dalam Setiap Bingkisan',
+    );
+    const subheadlineText = getCmsText(
+        content,
+        'subheadline',
+        'Kurasi hampers eksklusif dengan kemasan penuh estetika dan sentuhan personal untuk merayakan momen berharga bersama orang terdekat maupun relasi bisnis.',
+    );
+    const primaryCtaLabel = getCmsText(
+        content,
+        'primary_cta_label',
+        'Lihat Koleksi',
+    );
+    const secondaryCtaLabel = getCmsText(
+        content,
+        'secondary_cta_label',
+        'Pesan via WhatsApp',
+    );
 
     const productsWithImages = products.filter(
         (p) => Boolean(p.image_url) && p.image_url !== '',
@@ -246,7 +294,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
     };
 
     return (
-        <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden bg-[#122E21] px-6 pt-28 pb-16 md:pt-36 md:pb-24">
+        <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden bg-[#16233B] px-6 pt-28 pb-16 md:pt-36 md:pb-24">
             {/* ── 1. Grain texture — inline SVG data-URI, zero network request ── */}
             <div
                 aria-hidden="true"
@@ -262,10 +310,10 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-3 z-[2] rounded-2xl sm:inset-4 md:inset-5"
-                style={{ boxShadow: 'inset 0 0 0 1px rgba(197,160,89,0.22)' }}
+                style={{ boxShadow: 'inset 0 0 0 1px rgba(168,139,84,0.25)' }}
             />
 
-            {/* ── 3. Pita emas horizontal — latar detail kreatif ── */}
+            {/* ── 3. Pita brass horizontal — latar detail kreatif ── */}
             {/* Muncul pertama dalam urutan unboxing (ribbonVariant) */}
             <motion.div
                 aria-hidden="true"
@@ -279,7 +327,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                     className="h-px w-full"
                     style={{
                         background:
-                            'linear-gradient(to right, transparent 0%, rgba(197,160,89,0.18) 15%, rgba(197,160,89,0.28) 50%, rgba(197,160,89,0.18) 85%, transparent 100%)',
+                            'linear-gradient(to right, transparent 0%, rgba(168,139,84,0.18) 15%, rgba(168,139,84,0.28) 50%, rgba(168,139,84,0.18) 85%, transparent 100%)',
                     }}
                 />
                 {/* Garis horizontal kedua — lebih tipis, 1px di bawah */}
@@ -287,12 +335,12 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                     className="mt-[3px] h-px w-full"
                     style={{
                         background:
-                            'linear-gradient(to right, transparent 0%, rgba(197,160,89,0.09) 20%, rgba(197,160,89,0.15) 50%, rgba(197,160,89,0.09) 80%, transparent 100%)',
+                            'linear-gradient(to right, transparent 0%, rgba(168,139,84,0.09) 20%, rgba(168,139,84,0.15) 50%, rgba(168,139,84,0.09) 80%, transparent 100%)',
                     }}
                 />
             </motion.div>
 
-            {/* ── 4. Pita emas vertikal — melengkapi motif tanda silang pita ── */}
+            {/* ── 4. Pita brass vertikal — melengkapi motif tanda silang pita ── */}
             <motion.div
                 aria-hidden="true"
                 variants={shouldReduceMotion ? undefined : ribbonVariant}
@@ -304,7 +352,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                     className="h-full w-px"
                     style={{
                         background:
-                            'linear-gradient(to bottom, transparent 0%, rgba(197,160,89,0.18) 15%, rgba(197,160,89,0.28) 50%, rgba(197,160,89,0.18) 85%, transparent 100%)',
+                            'linear-gradient(to bottom, transparent 0%, rgba(168,139,84,0.18) 15%, rgba(168,139,84,0.28) 50%, rgba(168,139,84,0.18) 85%, transparent 100%)',
                     }}
                 />
             </motion.div>
@@ -314,9 +362,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
             >
-                <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C5A059]/12 blur-[130px] sm:h-[650px] sm:w-[650px]" />
-                <div className="absolute top-1/2 -left-20 h-80 w-80 rounded-full bg-[#D4AF37]/10 blur-[100px]" />
-                <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-[#D4AF37]/10 blur-[100px]" />
+                <div className="absolute top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#A88B54]/12 blur-[130px] sm:h-[650px] sm:w-[650px]" />
+                <div className="absolute top-1/2 -left-20 h-80 w-80 rounded-full bg-[#A88B54]/10 blur-[100px]" />
+                <div className="absolute top-1/2 -right-20 h-80 w-80 rounded-full bg-[#A88B54]/10 blur-[100px]" />
             </div>
 
             {/* ── 6. Foto lingkaran — mekar dari tengah ke posisi sudut ── */}
@@ -361,9 +409,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                     }
                     className={`absolute z-10 hidden md:block ${img.positionClass}`}
                 >
-                    <div className="pointer-events-none absolute inset-0 -m-4 rounded-full bg-[#D4AF37]/20 blur-2xl" />
+                    <div className="pointer-events-none absolute inset-0 -m-4 rounded-full bg-[#A88B54]/20 blur-2xl" />
                     <div
-                        className={`relative ${img.sizeClass} overflow-hidden rounded-full border border-[#C5A059]/40 shadow-[0_0_45px_rgba(212,175,55,0.25)] transition-transform duration-500 hover:scale-105`}
+                        className={`relative ${img.sizeClass} overflow-hidden rounded-full border border-[#A88B54]/45 shadow-[0_0_45px_rgba(168,139,84,0.25)] transition-transform duration-500 hover:scale-105`}
                     >
                         <img
                             src={img.src}
@@ -404,11 +452,10 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                 shouldReduceMotion ? undefined : fadeUpChild
                             }
                         >
-                            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#C5A059]/40 bg-[#C5A059]/10 px-4 py-1.5 backdrop-blur-sm">
-                                <span className="size-1.5 animate-pulse rounded-full bg-[#C5A059]" />
-                                <span className="font-sans text-[10px] font-semibold tracking-[0.24em] text-[#C5A059] uppercase sm:text-xs">
-                                    Curated Luxury Hampers &amp; Corporate
-                                    Gifting
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#A88B54]/45 bg-[#A88B54]/15 px-4 py-1.5 backdrop-blur-sm">
+                                <span className="size-1.5 animate-pulse rounded-full bg-[#A88B54]" />
+                                <span className="font-sans text-[10px] font-semibold tracking-[0.24em] text-[#F2EBDC] uppercase sm:text-xs">
+                                    {eyebrowText}
                                 </span>
                             </div>
                         </motion.div>
@@ -419,12 +466,12 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                             variants={
                                 shouldReduceMotion ? undefined : fadeUpChild
                             }
-                            aria-label={`Merangkai Kehangatan dalam Setiap Bingkisan ${ROTATING_WORDS[0]}`}
-                            className="font-serif text-3xl leading-[1.2] font-normal tracking-tight text-[#FAF7F2] sm:text-5xl md:text-6xl lg:text-[4rem]"
+                            aria-label={`${headlineLine1} ${headlineLine2} ${activeWords[0]}`}
+                            className="font-serif text-3xl leading-[1.18] font-normal tracking-normal text-[#F2EBDC] sm:text-5xl md:text-6xl lg:text-[4.25rem]"
                         >
                             {/* Baris 1: statis */}
                             <span className="block" aria-hidden="true">
-                                Merangkai Kehangatan
+                                {headlineLine1}
                             </span>
 
                             {/*
@@ -437,7 +484,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                 aria-hidden="true"
                             >
                                 <span className="whitespace-nowrap">
-                                    dalam Setiap Bingkisan
+                                    {headlineLine2}
                                 </span>
 
                                 {/* Container kata rotating — lebar dikunci ghost text */}
@@ -447,20 +494,20 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                         className="invisible whitespace-nowrap select-none"
                                         aria-hidden="true"
                                     >
-                                        {longestWord(ROTATING_WORDS)}
+                                        {longestWord(activeWords)}
                                     </span>
 
                                     {/* Kata aktual overlay */}
                                     <span className="absolute inset-0 flex items-baseline justify-start">
-                                        <span className="whitespace-nowrap text-[#C5A059]">
+                                        <span className="whitespace-nowrap text-[#A88B54]">
                                             {displayText}
                                         </span>
 
-                                        {/* Kursor champagne gold — smooth blink */}
+                                        {/* Kursor muted brass — smooth blink */}
                                         <span
                                             aria-hidden="true"
                                             className={[
-                                                'ml-[2px] inline-block self-stretch w-[1.5px] rounded-full bg-[#C5A059]',
+                                                'ml-[2px] inline-block w-[1.5px] self-stretch rounded-full bg-[#A88B54]',
                                                 'animate-cursor-blink',
                                                 !isTyping && !shouldReduceMotion
                                                     ? 'opacity-0'
@@ -477,12 +524,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                             variants={
                                 shouldReduceMotion ? undefined : fadeUpChild
                             }
-                            className="mt-6 max-w-xl font-sans text-sm leading-relaxed font-light text-[#FAF7F2]/80 sm:text-base md:text-lg"
+                            className="mt-6 max-w-xl font-sans text-sm leading-relaxed font-normal text-[#F2EBDC]/85 sm:text-base md:text-lg"
                         >
-                            Kurasi hampers eksklusif dengan kemasan penuh
-                            estetika dan sentuhan personal untuk merayakan momen
-                            berharga bersama orang terdekat maupun relasi
-                            bisnis.
+                            {subheadlineText}
                         </motion.p>
 
                         {/* CTA buttons */}
@@ -497,9 +541,9 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                 onClick={(e) =>
                                     handleSmoothScroll(e, '#koleksi')
                                 }
-                                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C5A059] px-8 py-3.5 font-sans text-sm font-medium tracking-wide text-[#122E21] shadow-lg shadow-[#C5A059]/15 transition-all duration-300 hover:scale-[1.02] hover:bg-[#D4AF37] hover:shadow-[#C5A059]/25 active:scale-[0.98] sm:w-auto sm:text-base"
+                                className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#A88B54] px-8 py-3.5 font-sans text-sm font-semibold tracking-wide text-[#16233B] shadow-lg shadow-[#A88B54]/20 transition-all duration-300 hover:scale-[1.02] hover:bg-[#B89B64] hover:shadow-[#A88B54]/30 active:scale-[0.98] sm:w-auto sm:text-base"
                             >
-                                Lihat Koleksi
+                                {primaryCtaLabel}
                                 <ArrowRightIcon className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                             </a>
 
@@ -507,10 +551,10 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                 href={WA_HERO_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#FAF7F2]/40 px-8 py-3.5 font-sans text-sm font-medium tracking-wide text-[#FAF7F2] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:bg-[#FAF7F2]/10 active:scale-[0.98] sm:w-auto sm:text-base"
+                                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#F2EBDC]/45 px-8 py-3.5 font-sans text-sm font-medium tracking-wide text-[#F2EBDC] backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:bg-[#F2EBDC]/10 active:scale-[0.98] sm:w-auto sm:text-base"
                             >
-                                <MessageCircleIcon className="size-4 text-[#C5A059]" />
-                                Pesan via WhatsApp
+                                <MessageCircleIcon className="size-4 text-[#A88B54]" />
+                                {secondaryCtaLabel}
                             </a>
                         </motion.div>
 
@@ -543,7 +587,7 @@ export default function HeroSection({ products = [] }: HeroSectionProps) {
                                               }
                                     }
                                 >
-                                    <div className="size-16 overflow-hidden rounded-full border border-[#C5A059]/40 shadow-[0_0_25px_rgba(212,175,55,0.22)] sm:size-20">
+                                    <div className="size-16 overflow-hidden rounded-full border border-[#A88B54]/45 shadow-[0_0_25px_rgba(168,139,84,0.22)] sm:size-20">
                                         <img
                                             src={img.src}
                                             alt={img.alt}

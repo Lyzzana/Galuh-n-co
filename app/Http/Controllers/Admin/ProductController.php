@@ -20,20 +20,32 @@ class ProductController extends Controller
             ->orderBy('sort_order')
             ->latest()
             ->get()
-            ->map(fn ($product) => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'category' => $product->category,
-                'short_description' => $product->short_description,
-                'contents' => $product->contents ?? [],
-                'price_from' => $product->price_from,
-                'image_url' => $product->image
-                    ? asset('storage/'.$product->image)
-                    : null,
-                'sort_order' => $product->sort_order,
-                'is_active' => $product->is_active,
-            ]);
+            ->map(function (Product $product): array {
+                $imageUrl = null;
+                if (! empty($product->image)) {
+                    if (str_starts_with($product->image, 'http://') || str_starts_with($product->image, 'https://')) {
+                        $imageUrl = $product->image;
+                    } else {
+                        $imageUrl = asset('storage/'.$product->image);
+                    }
+                }
+
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'category' => $product->category,
+                    'event_category' => $product->event_category,
+                    'season_tag' => $product->season_tag,
+                    'is_best_seller' => (bool) $product->is_best_seller,
+                    'short_description' => $product->short_description,
+                    'contents' => $product->contents,
+                    'price_from' => $product->price_from,
+                    'image_url' => $imageUrl,
+                    'sort_order' => $product->sort_order,
+                    'is_active' => $product->is_active,
+                ];
+            });
 
         return Inertia::render('admin/products/index', [
             'products' => $products,
@@ -46,6 +58,10 @@ class ProductController extends Controller
         $data['slug'] = $this->generateUniqueSlug($data['name']);
         $data['sort_order'] = $data['sort_order'] ?? 0;
         $data['is_active'] = $request->boolean('is_active', true);
+        $data['is_best_seller'] = $request->boolean('is_best_seller', false);
+        $data['season_tag'] = filled($data['season_tag'] ?? null) ? trim((string) $data['season_tag']) : null;
+        $data['is_best_seller'] = $request->boolean('is_best_seller', false);
+        $data['season_tag'] = filled($data['season_tag'] ?? null) ? trim((string) $data['season_tag']) : null;
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
@@ -66,6 +82,8 @@ class ProductController extends Controller
 
         $data['sort_order'] = $data['sort_order'] ?? 0;
         $data['is_active'] = $request->boolean('is_active', true);
+        $data['is_best_seller'] = $request->boolean('is_best_seller', false);
+        $data['season_tag'] = filled($data['season_tag'] ?? null) ? trim((string) $data['season_tag']) : null;
 
         if ($request->hasFile('image')) {
             if ($product->image) {

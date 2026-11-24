@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { lazy, Suspense } from 'react';
 import { MotionConfig } from 'motion/react';
+import type { GroupedLandingContent } from '@/components/landing/cms';
 import type { Product } from '@/types/product';
 
 // ── Above-the-fold — eager import (LCP critical path) ────────────────────────
@@ -41,6 +42,7 @@ export interface WelcomeProps {
     products?: Product[];
     categories?: string[];
     partners?: PartnerItem[];
+    contents?: GroupedLandingContent;
 }
 
 // Skeleton placeholder ringan — ditampilkan saat chunk lazy sedang diunduh.
@@ -50,13 +52,14 @@ function SectionSkeleton({
 }: {
     minHeight?: string;
 }) {
-    return <div className={`${minHeight} bg-[#FAF7F2]`} aria-hidden="true" />;
+    return <div className={`${minHeight} bg-[#F2EBDC]`} aria-hidden="true" />;
 }
 
 export default function Welcome({
     products = [],
     categories = [],
     partners = [],
+    contents = {},
 }: WelcomeProps) {
     return (
         <MotionConfig reducedMotion="user">
@@ -71,11 +74,11 @@ export default function Welcome({
                 />
             </Head>
 
-            <div className="no-scrollbar min-h-screen bg-[#FAF7F2] font-sans text-[#2C1E16] antialiased selection:bg-[#C5A059]/25 selection:text-[#122E21]">
+            <div className="no-scrollbar min-h-screen bg-[#F2EBDC] font-sans text-[#16233B] antialiased selection:bg-[#A88B54]/25 selection:text-[#16233B]">
                 {/* ── Above-the-fold (eager) ── */}
                 <Navbar />
-                <HeroSection products={products} />
-                <AboutSection products={products} />
+                <HeroSection products={products} content={contents.hero} />
+                <AboutSection products={products} content={contents.about} />
 
                 {/* ── Below-the-fold (lazy + Suspense) ── */}
 
@@ -85,43 +88,47 @@ export default function Welcome({
                     <CatalogSection
                         products={products}
                         categories={categories}
+                        content={contents.catalog}
                     />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[480px]" />}
                 >
-                    <WhyChooseUsSection />
+                    <WhyChooseUsSection content={contents.why_us} />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[400px]" />}
                 >
-                    <HowToOrderSection />
+                    <HowToOrderSection content={contents.how_to_order} />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[600px]" />}
                 >
-                    <CorporateSection partners={partners} />
+                    <CorporateSection
+                        partners={partners}
+                        content={contents.corporate}
+                    />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[480px]" />}
                 >
-                    <TestimonialsSection />
+                    <TestimonialsSection content={contents.testimonials} />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[400px]" />}
                 >
-                    <FaqSection />
+                    <FaqSection content={contents.faq} />
                 </Suspense>
 
                 <Suspense
                     fallback={<SectionSkeleton minHeight="min-h-[320px]" />}
                 >
-                    <FooterSection />
+                    <FooterSection content={contents.footer} />
                 </Suspense>
 
                 {/* FloatingWhatsApp — kecil, selalu eager */}

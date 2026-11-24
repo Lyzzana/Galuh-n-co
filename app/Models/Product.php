@@ -18,6 +18,9 @@ use Illuminate\Support\Str;
  * @property string|null $image
  * @property int $sort_order
  * @property bool $is_active
+ * @property string $event_category
+ * @property string|null $season_tag
+ * @property bool $is_best_seller
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  */
@@ -33,6 +36,9 @@ class Product extends Model
         'image',
         'sort_order',
         'is_active',
+        'event_category',
+        'season_tag',
+        'is_best_seller',
     ];
 
     protected function casts(): array
@@ -42,6 +48,7 @@ class Product extends Model
             'price_from' => 'integer',
             'sort_order' => 'integer',
             'is_active' => 'boolean',
+            'is_best_seller' => 'boolean',
         ];
     }
 

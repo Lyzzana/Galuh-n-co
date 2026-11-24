@@ -6,6 +6,7 @@ import {
     StarIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { getCmsText, type SectionContent } from '@/components/landing/cms';
 
 const TESTIMONIALS = [
     {
@@ -64,10 +65,26 @@ const TESTIMONIALS = [
     },
 ];
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({
+    content,
+}: {
+    content?: SectionContent;
+}) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const eyebrow = getCmsText(content, 'eyebrow', 'Cerita & Apresiasi');
+    const title = getCmsText(
+        content,
+        'title',
+        'Kehangatan yang Dirasakan Penerima',
+    );
+    const description = getCmsText(
+        content,
+        'description',
+        'Untaian kesan tulus dari mereka yang telah mempercayakan momen berharga bersama Galuh & Co.',
+    );
 
     const checkScrollButtons = () => {
         if (scrollContainerRef.current) {
@@ -90,29 +107,36 @@ export default function TestimonialsSection() {
     };
 
     return (
-        <section className="relative overflow-hidden border-t border-[#E5DEC9]/60 bg-[#FAF7F2] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#F2EBDC] py-20 md:py-28">
             <div className="mx-auto max-w-7xl px-6">
                 {/* Header Rata Tengah */}
-                <div className="mx-auto max-w-2xl text-center">
-                    <span className="font-sans text-xs font-semibold tracking-[0.24em] text-[#C5A059] uppercase">
-                        Cerita &amp; Apresiasi
+                <div className="relative mx-auto max-w-2xl text-center">
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -top-10 left-1/2 h-56 w-80 -translate-x-1/2 rounded-full blur-2xl"
+                        style={{
+                            background:
+                                'radial-gradient(circle, rgba(168,139,84,0.08) 0%, transparent 70%)',
+                        }}
+                    />
+                    <span className="relative font-sans text-xs font-semibold tracking-[0.24em] text-[#6E675D] uppercase">
+                        {eyebrow}
                     </span>
-                    <h2 className="mt-3 font-serif text-3xl leading-tight font-normal text-[#2C1E16] sm:text-4xl lg:text-5xl">
-                        Kehangatan yang Dirasakan Penerima
+                    <h2 className="relative mt-3 font-serif text-3xl leading-tight font-normal tracking-normal text-[#16233B] sm:text-4xl lg:text-5xl">
+                        {title}
                     </h2>
-                    <p className="mt-4 font-sans text-sm font-light text-[#6B5E55] sm:text-base">
-                        Untaian kesan tulus dari mereka yang telah mempercayakan
-                        momen berharga bersama Galuh &amp; Co.
+                    <p className="relative mt-4 font-sans text-sm font-normal text-[#6E675D] sm:text-base">
+                        {description}
                     </p>
 
                     {/* Tombol Panah Navigasi Carousel */}
-                    <div className="mt-8 flex items-center justify-center gap-3">
+                    <div className="relative mt-8 flex items-center justify-center gap-3">
                         <button
                             type="button"
                             aria-label="Geser testimoni ke kiri"
                             onClick={() => handleScroll('left')}
                             disabled={!canScrollLeft}
-                            className="flex size-10 items-center justify-center rounded-full border border-[#C5A059]/40 bg-white text-[#163828] shadow-xs transition-all hover:scale-105 hover:bg-[#FAF7F2] active:scale-95 disabled:opacity-40"
+                            className="flex size-10 items-center justify-center rounded-full border border-[#A88B54]/35 bg-[#FAF7F0] text-[#16233B] shadow-[0_6px_18px_-6px_rgba(22,35,59,0.14)] transition-all hover:scale-105 hover:bg-[#16233B] hover:text-[#F2EBDC] active:scale-95 disabled:opacity-40"
                         >
                             <ChevronLeftIcon className="size-5" />
                         </button>
@@ -121,21 +145,21 @@ export default function TestimonialsSection() {
                             aria-label="Geser testimoni ke kanan"
                             onClick={() => handleScroll('right')}
                             disabled={!canScrollRight}
-                            className="flex size-10 items-center justify-center rounded-full border border-[#C5A059]/40 bg-white text-[#163828] shadow-xs transition-all hover:scale-105 hover:bg-[#FAF7F2] active:scale-95 disabled:opacity-40"
+                            className="flex size-10 items-center justify-center rounded-full border border-[#A88B54]/35 bg-[#FAF7F0] text-[#16233B] shadow-[0_6px_18px_-6px_rgba(22,35,59,0.14)] transition-all hover:scale-105 hover:bg-[#16233B] hover:text-[#F2EBDC] active:scale-95 disabled:opacity-40"
                         >
                             <ChevronRightIcon className="size-5" />
                         </button>
                     </div>
                 </div>
 
-                {/* Untaian Tali Pita Emas (Golden Ribbon String SVG) di Atas Kartu */}
+                {/* Untaian Tali Pita Brass (Muted Brass Ribbon String SVG) di Atas Kartu */}
                 <div className="relative mt-12 w-full">
                     <div
                         aria-hidden="true"
                         className="pointer-events-none absolute top-4 right-0 left-0 z-0 hidden w-full overflow-hidden md:block"
                     >
                         <svg
-                            className="h-8 w-full text-[#C5A059]/50"
+                            className="h-8 w-full text-[#A88B54]/55"
                             preserveAspectRatio="none"
                             viewBox="0 0 1200 40"
                             fill="none"
@@ -149,7 +173,7 @@ export default function TestimonialsSection() {
                         </svg>
                     </div>
 
-                    {/* Lintasan Kartu Ucapan Gantung (Drag & Scrollable Carousel) */}
+                    {/* Lintasan Kartu Ucapan Gantung — Soft Navy Luxury Accent Cards */}
                     <div
                         ref={scrollContainerRef}
                         onScroll={checkScrollButtons}
@@ -167,19 +191,19 @@ export default function TestimonialsSection() {
                                         ease: 'easeInOut',
                                     },
                                 }}
-                                className="relative flex w-[320px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-[#C5A059]/35 bg-white p-7 shadow-lg transition-shadow duration-300 hover:shadow-2xl sm:w-[360px]"
+                                className="relative flex w-[320px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-[#A88B54]/35 bg-[#1E2F4D] p-7 shadow-[0_18px_40px_-14px_rgba(22,35,59,0.38)] transition-all duration-300 hover:border-[#A88B54]/65 hover:shadow-[0_24px_48px_-12px_rgba(22,35,59,0.48)] sm:w-[360px]"
                             >
-                                {/* Ornamen Simpul Gantung Pita Emas di Tengah Atas Kartu */}
+                                {/* Ornamen Simpul Gantung Pita Brass di Tengah Atas Kartu */}
                                 <div className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center justify-center">
-                                    <div className="size-6 rounded-full border border-[#C5A059] bg-[#FAF7F2] p-1 shadow-xs">
-                                        <div className="size-full rounded-full bg-[#C5A059]" />
+                                    <div className="size-6 rounded-full border border-[#A88B54] bg-[#16233B] p-1 shadow-xs">
+                                        <div className="size-full rounded-full bg-[#A88B54]" />
                                     </div>
                                 </div>
 
                                 <div>
                                     {/* Star Rating & Quote Icon */}
-                                    <div className="flex items-center justify-between border-b border-[#E5DEC9]/50 pb-4">
-                                        <div className="flex items-center gap-1 text-[#C5A059]">
+                                    <div className="flex items-center justify-between border-b border-[#A88B54]/25 pb-4">
+                                        <div className="flex items-center gap-1 text-[#A88B54]">
                                             {Array.from({
                                                 length: item.rating,
                                             }).map((_, i) => (
@@ -189,28 +213,28 @@ export default function TestimonialsSection() {
                                                 />
                                             ))}
                                         </div>
-                                        <QuoteIcon className="size-6 text-[#C5A059]/40" />
+                                        <QuoteIcon className="size-6 text-[#A88B54]/55" />
                                     </div>
 
                                     {/* Kutipan Testimoni */}
-                                    <p className="mt-5 font-sans text-sm leading-relaxed font-light text-[#2C1E16]">
+                                    <p className="mt-5 font-sans text-sm leading-relaxed font-normal text-[#F2EBDC]/95">
                                         &ldquo;{item.quote}&rdquo;
                                     </p>
                                 </div>
 
                                 {/* Penulis & Perusahaan */}
-                                <div className="mt-8 flex items-center gap-3.5 border-t border-[#E5DEC9]/50 pt-5">
-                                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#163828] font-serif text-sm font-semibold text-[#C5A059] shadow-xs">
+                                <div className="mt-8 flex items-center gap-3.5 border-t border-[#A88B54]/25 pt-5">
+                                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full border border-[#A88B54]/40 bg-[#16233B] font-serif text-sm font-semibold text-[#A88B54] shadow-xs">
                                         {item.initials}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <h4 className="truncate font-serif text-base font-medium text-[#163828]">
+                                        <h4 className="truncate font-serif text-base font-semibold text-[#F2EBDC]">
                                             {item.author}
                                         </h4>
-                                        <p className="truncate font-sans text-xs text-[#6B5E55]">
+                                        <p className="truncate font-sans text-xs text-[#F2EBDC]/75">
                                             {item.role}
                                         </p>
-                                        <p className="truncate font-sans text-[11px] font-medium text-[#C5A059]">
+                                        <p className="truncate font-sans text-[11px] font-semibold text-[#F2EBDC]/90">
                                             {item.company}
                                         </p>
                                     </div>

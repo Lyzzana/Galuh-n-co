@@ -17,10 +17,22 @@ import { Textarea } from '@/components/ui/textarea';
 import ProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
 import { cn } from '@/utils';
 
+const EVENT_CATEGORIES = [
+    'Lebaran',
+    'Natal',
+    'Imlek',
+    'Wedding',
+    'Corporate',
+    'All Occasion',
+] as const;
+
 type Product = {
     id: number;
     name: string;
     category: string;
+    event_category: string;
+    season_tag: string | null;
+    is_best_seller: boolean;
     short_description: string;
     contents: string[];
     price_from: number;
@@ -34,6 +46,9 @@ type PageProps = { products: Product[] };
 type ProductFormData = {
     name: string;
     category: string;
+    event_category: string;
+    season_tag: string;
+    is_best_seller: boolean;
     short_description: string;
     contents: string;
     price_from: string;
@@ -52,6 +67,9 @@ export default function ProductsIndex({ products }: PageProps) {
         useForm<ProductFormData>({
             name: '',
             category: '',
+            event_category: 'All Occasion',
+            season_tag: '',
+            is_best_seller: false,
             short_description: '',
             contents: '',
             price_from: '',
@@ -63,7 +81,8 @@ export default function ProductsIndex({ products }: PageProps) {
     const filtered = products.filter(
         (p) =>
             p.name.toLowerCase().includes(search.toLowerCase()) ||
-            p.category.toLowerCase().includes(search.toLowerCase()),
+            p.category.toLowerCase().includes(search.toLowerCase()) ||
+            p.event_category.toLowerCase().includes(search.toLowerCase()),
     );
 
     const openCreate = () => {
@@ -77,6 +96,9 @@ export default function ProductsIndex({ products }: PageProps) {
         setData({
             name: product.name,
             category: product.category,
+            event_category: product.event_category || 'All Occasion',
+            season_tag: product.season_tag ?? '',
+            is_best_seller: product.is_best_seller,
             short_description: product.short_description,
             contents: product.contents.join('\n'),
             price_from: product.price_from.toString(),
@@ -96,6 +118,11 @@ export default function ProductsIndex({ products }: PageProps) {
         const payload = new FormData();
         payload.append('name', data.name);
         payload.append('category', data.category);
+        payload.append('event_category', data.event_category);
+        if (data.season_tag.trim() !== '') {
+            payload.append('season_tag', data.season_tag.trim());
+        }
+        payload.append('is_best_seller', data.is_best_seller ? '1' : '0');
         payload.append('short_description', data.short_description);
         contentsArray.forEach((item) => payload.append('contents[]', item));
         payload.append('price_from', data.price_from);
@@ -265,7 +292,22 @@ export default function ProductsIndex({ products }: PageProps) {
                                                 </p>
                                             </td>
                                             <td className="px-4 py-3 text-gray-600">
-                                                {product.category}
+                                                <p>{product.category}</p>
+                                                <div className="mt-1 flex flex-wrap gap-1">
+                                                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700">
+                                                        {product.event_category}
+                                                    </span>
+                                                    {product.season_tag && (
+                                                        <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">
+                                                            {product.season_tag}
+                                                        </span>
+                                                    )}
+                                                    {product.is_best_seller && (
+                                                        <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+                                                            Best Seller
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-4 py-3 text-right font-medium text-gray-900">
                                                 {formatRupiah(
@@ -374,6 +416,53 @@ export default function ProductsIndex({ products }: PageProps) {
                                     {errors.category}
                                 </p>
                             )}
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="event_category">
+                                    Event / Momen
+                                </Label>
+                                <select
+                                    id="event_category"
+                                    value={data.event_category}
+                                    onChange={(e) =>
+                                        setData(
+                                            'event_category',
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                >
+                                    {EVENT_CATEGORIES.map((ev) => (
+                                        <option key={ev} value={ev}>
+                                            {ev}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.event_category && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.event_category}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="season_tag">
+                                    Tag Season (Opsional)
+                                </Label>
+                                <Input
+                                    id="season_tag"
+                                    value={data.season_tag}
+                                    onChange={(e) =>
+                                        setData('season_tag', e.target.value)
+                                    }
+                                    placeholder="cth. Ramadan 2026"
+                                />
+                                {errors.season_tag && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.season_tag}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                         <div className="grid gap-1.5">
                             <Label htmlFor="short_description">
@@ -486,17 +575,31 @@ export default function ProductsIndex({ products }: PageProps) {
                                 />
                             )}
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                id="is_active"
-                                checked={data.is_active}
-                                onCheckedChange={(c) =>
-                                    setData('is_active', Boolean(c))
-                                }
-                            />
-                            <Label htmlFor="is_active">
-                                Tampilkan di katalog
-                            </Label>
+                        <div className="flex flex-wrap items-center gap-6">
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="is_active"
+                                    checked={data.is_active}
+                                    onCheckedChange={(c) =>
+                                        setData('is_active', Boolean(c))
+                                    }
+                                />
+                                <Label htmlFor="is_active">
+                                    Tampilkan di katalog
+                                </Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="is_best_seller"
+                                    checked={data.is_best_seller}
+                                    onCheckedChange={(c) =>
+                                        setData('is_best_seller', Boolean(c))
+                                    }
+                                />
+                                <Label htmlFor="is_best_seller">
+                                    Produk Best Seller
+                                </Label>
+                            </div>
                         </div>
                     </form>
                     <DialogFooter>

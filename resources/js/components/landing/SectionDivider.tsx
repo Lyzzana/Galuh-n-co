@@ -1,15 +1,15 @@
 /**
- * SectionDivider — ornamen pemisah antar-section bergaya "Warm Luxury".
+ * SectionDivider — ornamen pemisah antar-section bergaya "Deep Navy & Warm Ivory".
  *
- * Menggantikan `border-t border-[#E5DEC9]/60` yang kaku dengan:
- *   1. Gradien fade kiri-kanan berwarna champagne gold tipis.
- *   2. Ornamen berlian + garis emas di tengah (motif pita/berlian seperti footer).
+ * Menggantikan garis pembatas kaku dengan:
+ *   1. Gradien fade kiri-kanan berwarna muted brass tipis (#A88B54).
+ *   2. Ornamen berlian + garis brass di tengah.
  *
  * Mendukung `prefers-reduced-motion` — ornamen tetap tampil statis jika aktif.
  *
  * Prop `variant`:
- *   "light"  → digunakan di section bg-[#FAF7F2] (mayoritas section)
- *   "dark"   → digunakan di section bg-[#122E21] (Hero → About transition)
+ *   "light"  → digunakan di section bg-[#F2EBDC] (mayoritas section)
+ *   "dark"   → digunakan di section bg-[#16233B] (Hero → About transition)
  */
 
 interface SectionDividerProps {
@@ -20,10 +20,10 @@ export default function SectionDivider({
     variant = 'light',
 }: SectionDividerProps) {
     const lineColor =
-        variant === 'dark' ? 'rgba(197,160,89,0.25)' : 'rgba(197,160,89,0.35)';
-    const dotColor = variant === 'dark' ? '#C5A059' : '#C5A059';
-    const bgPin = variant === 'dark' ? '#122E21' : '#FAF7F2';
-    const textColor = variant === 'dark' ? '#C5A059' : '#C5A059';
+        variant === 'dark' ? 'rgba(168,139,84,0.3)' : 'rgba(168,139,84,0.4)';
+    const dotColor = '#A88B54';
+    const bgPin = variant === 'dark' ? '#16233B' : '#F2EBDC';
+    const textColor = variant === 'dark' ? '#A88B54' : '#6E675D';
 
     return (
         <div
@@ -70,10 +70,10 @@ export default function SectionDivider({
                     />
                 </svg>
 
-                {/* Label brand mikro — hidden di layar, visible jika diperlukan */}
+                {/* Label brand mikro */}
                 <span
                     className="font-serif text-[9px] tracking-[0.22em] uppercase"
-                    style={{ color: textColor, opacity: 0.75 }}
+                    style={{ color: textColor }}
                 >
                     G&amp;C
                 </span>

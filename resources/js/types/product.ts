@@ -3,6 +3,9 @@ export interface Product {
     name: string;
     slug: string;
     category: string;
+    event_category: string;
+    season_tag: string | null;
+    is_best_seller: boolean;
     short_description: string;
     contents: string[];
     price_from: number;

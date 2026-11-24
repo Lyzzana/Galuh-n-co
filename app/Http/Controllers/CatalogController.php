@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LandingContent;
 use App\Models\Partner;
 use App\Models\Product;
 use Illuminate\Support\Collection;
@@ -19,6 +20,9 @@ class CatalogController extends Controller
      *         name: string,
      *         slug: string,
      *         category: string,
+     *         event_category: string,
+     *         season_tag: string|null,
+     *         is_best_seller: bool,
      *         short_description: string,
      *         contents: array<int, string>,
      *         price_from: int,
@@ -51,6 +55,9 @@ class CatalogController extends Controller
                     'name' => $product->name,
                     'slug' => $product->slug,
                     'category' => $product->category,
+                    'event_category' => $product->event_category,
+                    'season_tag' => $product->season_tag,
+                    'is_best_seller' => (bool) $product->is_best_seller,
                     'short_description' => $product->short_description,
                     'contents' => $product->contents,
                     'price_from' => (int) $product->price_from,
@@ -91,6 +98,7 @@ class CatalogController extends Controller
 
         return Inertia::render('welcome', array_merge($data, [
             'partners' => $partners,
+            'contents' => LandingContent::getGroupedContents(),
         ]));
     }
 

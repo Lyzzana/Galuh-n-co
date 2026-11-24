@@ -5,7 +5,9 @@ import {
     BuildingIcon,
     ChevronLeftIcon,
     ChevronRightIcon,
+    ClipboardListIcon,
     LayoutGridIcon,
+    LayoutTemplateIcon,
     LogOutIcon,
     MenuIcon,
     MessageSquareTextIcon,
@@ -14,6 +16,8 @@ import {
 } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import * as AdminInquiryController from '@/actions/App/Http/Controllers/Admin/InquiryController';
+import * as AdminLandingContentController from '@/actions/App/Http/Controllers/Admin/LandingContentController';
+import * as AdminOrderController from '@/actions/App/Http/Controllers/Admin/OrderController';
 import * as AdminPartnerController from '@/actions/App/Http/Controllers/Admin/PartnerController';
 import * as AdminProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
 import { useCurrentUrl } from '@/hooks/use-current-url';
@@ -35,6 +39,11 @@ const navItems = [
         label: 'Produk',
     },
     {
+        href: AdminOrderController.index().url,
+        icon: ClipboardListIcon,
+        label: 'Pesanan',
+    },
+    {
         href: AdminInquiryController.index().url,
         icon: MessageSquareTextIcon,
         label: 'Inquiry',
@@ -43,6 +52,11 @@ const navItems = [
         href: AdminPartnerController.index().url,
         icon: BuildingIcon,
         label: 'Partner',
+    },
+    {
+        href: AdminLandingContentController.index().url,
+        icon: LayoutTemplateIcon,
+        label: 'Konten Landing',
     },
     { href: '/settings/profile', icon: SettingsIcon, label: 'Pengaturan' },
 ];

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
+import { getCmsText, type SectionContent } from '@/components/landing/cms';
 
 const FAQS = [
     {
@@ -38,8 +39,16 @@ const FAQS = [
     },
 ];
 
-export default function FaqSection() {
+export default function FaqSection({ content }: { content?: SectionContent }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+    const eyebrow = getCmsText(content, 'eyebrow', 'Pertanyaan Umum');
+    const title = getCmsText(content, 'title', 'Informasi Seputar Pemesanan');
+    const description = getCmsText(
+        content,
+        'description',
+        'Segala hal penting yang perlu Anda ketahui mengenai layanan kurasi, proses pengemasan, dan kebijakan pengiriman kami.',
+    );
 
     const toggleFaq = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -48,21 +57,27 @@ export default function FaqSection() {
     return (
         <section
             id="faq"
-            className="scroll-mt-20 border-t border-[#E5DEC9]/60 bg-[#FAF7F2] py-20 md:py-28"
+            className="relative scroll-mt-20 overflow-hidden border-t border-[#A88B54]/25 bg-[#F2EBDC] py-20 md:py-28"
         >
             <div className="mx-auto max-w-3xl px-6">
                 {/* Header */}
-                <div className="text-center">
-                    <span className="font-sans text-xs font-semibold tracking-[0.24em] text-[#C5A059] uppercase">
-                        Pertanyaan Umum
+                <div className="relative text-center">
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -top-10 left-1/2 h-56 w-80 -translate-x-1/2 rounded-full blur-2xl"
+                        style={{
+                            background:
+                                'radial-gradient(circle, rgba(168,139,84,0.08) 0%, transparent 70%)',
+                        }}
+                    />
+                    <span className="relative font-sans text-xs font-semibold tracking-[0.24em] text-[#6E675D] uppercase">
+                        {eyebrow}
                     </span>
-                    <h2 className="mt-3 font-serif text-3xl leading-tight font-normal text-[#2C1E16] sm:text-4xl lg:text-5xl">
-                        Informasi Seputar Pemesanan
+                    <h2 className="relative mt-3 font-serif text-3xl leading-tight font-normal tracking-normal text-[#16233B] sm:text-4xl lg:text-5xl">
+                        {title}
                     </h2>
-                    <p className="mt-4 font-sans text-sm font-light text-[#6B5E55] sm:text-base">
-                        Segala hal penting yang perlu Anda ketahui mengenai
-                        layanan kurasi, proses pengemasan, dan kebijakan
-                        pengiriman kami.
+                    <p className="relative mt-4 font-sans text-sm font-normal text-[#6E675D] sm:text-base">
+                        {description}
                     </p>
                 </div>
 
@@ -73,7 +88,7 @@ export default function FaqSection() {
                         return (
                             <div
                                 key={index}
-                                className="overflow-hidden rounded-2xl border border-[#E5DEC9] bg-white transition-colors duration-200 hover:border-[#C5A059]/50"
+                                className="overflow-hidden rounded-2xl border border-[#A88B54]/25 bg-[#FAF7F0] shadow-[0_12px_30px_-12px_rgba(22,35,59,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#A88B54]/60 hover:shadow-[0_18px_38px_-12px_rgba(22,35,59,0.16)]"
                             >
                                 <button
                                     type="button"
@@ -81,11 +96,11 @@ export default function FaqSection() {
                                     aria-expanded={isOpen}
                                     className="flex w-full items-center justify-between p-5 text-left sm:p-6"
                                 >
-                                    <span className="font-serif text-base font-medium text-[#2C1E16] sm:text-lg">
+                                    <span className="font-serif text-base font-semibold text-[#16233B] sm:text-lg">
                                         {faq.question}
                                     </span>
                                     <ChevronDownIcon
-                                        className={`size-5 shrink-0 text-[#C5A059] transition-transform duration-300 ${
+                                        className={`size-5 shrink-0 text-[#A88B54] transition-transform duration-300 ${
                                             isOpen ? 'rotate-180' : ''
                                         }`}
                                     />
@@ -111,8 +126,8 @@ export default function FaqSection() {
                                                 ease: [0.16, 1, 0.3, 1],
                                             }}
                                         >
-                                            <div className="border-t border-[#E5DEC9]/50 px-5 pt-3 pb-6 sm:px-6">
-                                                <p className="font-sans text-sm leading-relaxed font-light text-[#6B5E55]">
+                                            <div className="border-t border-[#A88B54]/25 px-5 pt-3 pb-6 sm:px-6">
+                                                <p className="font-sans text-sm leading-relaxed font-normal text-[#6E675D]">
                                                     {faq.answer}
                                                 </p>
                                             </div>
